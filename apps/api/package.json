@@ -12,7 +12,9 @@
   "packageManager": "pnpm@10.30.0",
   "dependencies": {
     "@maple/types": "workspace:*",
+    "@prisma/client": "^7.4.0",
     "fastify": "^5.7.4",
+    "prisma": "^7.4.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
