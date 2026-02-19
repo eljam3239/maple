@@ -59,6 +59,8 @@ export async function getOrCreateSession(playerId: string) {
           direction: g.direction,
           provinceMatch: targetCity ? g.city.province === targetCity.province : false,
           populationHint,
+          latitude: g.city.latitude,
+          longitude: g.city.longitude,
         };
       }),
     };

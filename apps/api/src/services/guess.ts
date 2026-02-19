@@ -88,5 +88,7 @@ export async function evaluateGuess(sessionId: string, cityName: string) {
     direction,
     provinceMatch: guessedCity.province === targetCity.province,
     populationHint,
+    latitude: guessedCity.latitude,
+    longitude: guessedCity.longitude,
   };
 }
