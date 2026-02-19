@@ -12,3 +12,42 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model City {
+  id        	Int	@id @default(autoincrement())
+  name		String
+  province	String
+  latitude	Float
+  longitude	Float
+  population	Int
+  enabled	Boolean @default(true)
+  puzzle 	DailyPuzzle[]
+}
+
+model DailyPuzzle {
+  date		DateTime @id
+  cityId	Int
+  city		City	 @relation(fields: [cityId], references: [id])
+}
+
+model Player {
+  id 		String   @id @default(uuid())
+  createdAt	DateTime @default(now())
+  currentStreak Int      @default(0)
+  maxStreak	Int	 @default(0)
+  lastPlayDate  DateTime?
+  session       GameSession[]
+}
+
+model GameSession {
+  id		Int 	 @id @default(autoincrement())
+  playerId	String
+  player	Player   @relation(fields: [playerId], references: [id])
+  date		DateTime
+  completed	Boolean  @default(false)
+  won		Boolean?
+  attempts	Int	 @default(0)
+  createdAt	DateTime @default(now())
+
+  @@unique([playerId, date])
+}
