@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
 import './App.css'
 
 interface GuessResult {
@@ -8,6 +10,21 @@ interface GuessResult {
   direction: string
   provinceMatch: boolean
   populationHint: 'larger' | 'smaller' | 'equal'
+  latitude: number
+  longitude: number
+}
+
+// Returns a color from red → orange → yellow → green based on distance
+// 0 km = bold green, ~MAX_DISTANCE km or more = bold red
+function distanceToColor(distanceKm: number, correct: boolean): string {
+  if (correct) return '#2e7d32'
+  // Canada is ~5500km across; cap at 5000km for the gradient
+  const maxDist = 5000
+  const t = Math.min(distanceKm / maxDist, 1) // 0 = close, 1 = far
+
+  // Interpolate hue: 120 (green) → 60 (yellow) → 30 (orange) → 0 (red)
+  const hue = Math.round(120 * (1 - t))
+  return `hsl(${hue}, 100%, 40%)`
 }
 
 async function getOrCreatePlayerId(): Promise<string> {
@@ -124,6 +141,32 @@ function App() {
       )}
 
       {error && <p className="error">{error}</p>}
+
+      <div className="map-container">
+        <MapContainer center={[56, -96]} zoom={4} scrollWheelZoom={true} style={{ height: '600px', width: '100%' }}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {guesses.map((g, i) => {
+            const color = distanceToColor(g.distanceKm, g.correct)
+            return (
+              <CircleMarker
+                key={i}
+                center={[g.latitude, g.longitude]}
+                radius={8}
+                pathOptions={{
+                  color,
+                  fillColor: color,
+                  fillOpacity: 0.8,
+                }}
+              >
+                <Tooltip>{g.city}</Tooltip>
+              </CircleMarker>
+            )
+          })}
+        </MapContainer>
+      </div>
 
       {guesses.length > 0 && (
         <table>
