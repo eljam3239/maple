@@ -1,7 +1,8 @@
 export interface GuessResponse {
   correct: boolean;
-  distance_km: number;
+  distanceKm: number;
   direction: string;
   provinceMatch: boolean;
+  populationHint: "larger" | "smaller" | "equal";
 }
 
