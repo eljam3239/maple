@@ -11,6 +11,12 @@ export async function createPlayer() {
 }
 
 export async function getOrCreateSession(playerId: string) {
+  // Ensure the player exists; if not, create one with the given id
+  const player = await prisma.player.findUnique({ where: { id: playerId } });
+  if (!player) {
+    await prisma.player.create({ data: { id: playerId } });
+  }
+
   const puzzle = await getOrCreateDailyPuzzle();
   const today = puzzle.date;
 
