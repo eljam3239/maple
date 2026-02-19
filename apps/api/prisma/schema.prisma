@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -21,6 +21,7 @@ model City {
   longitude	Float
   population	Int
   enabled	Boolean @default(true)
+  @@unique([name, province])
   puzzle 	DailyPuzzle[]
 }
 

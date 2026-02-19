@@ -1,0 +1,212 @@
+[
+{
+"name": "Toronto",
+"province": "Ontario",
+"latitude": 43.7417,
+"longitude": -79.3733,
+"population": 5647656
+},
+{
+"name": "Montreal",
+"province": "Quebec",
+"latitude": 45.5089,
+"longitude": -73.5617,
+"population": 3675219
+},
+{
+"name": "Vancouver",
+"province": "British Columbia",
+"latitude": 49.25,
+"longitude": -123.1,
+"population": 2426160
+},
+{
+"name": "Calgary",
+"province": "Alberta",
+"latitude": 51.05,
+"longitude": -114.0667,
+"population": 1306784
+},
+{
+"name": "Edmonton",
+"province": "Alberta",
+"latitude": 53.5344,
+"longitude": -113.4903,
+"population": 1151635
+},
+{
+"name": "Ottawa",
+"province": "Ontario",
+"latitude": 45.4247,
+"longitude": -75.695,
+"population": 1068821
+},
+{
+"name": "Winnipeg",
+"province": "Manitoba",
+"latitude": 49.8844,
+"longitude": -97.1464,
+"population": 758515
+},
+{
+"name": "Quebec City",
+"province": "Quebec",
+"latitude": 46.8139,
+"longitude": -71.2081,
+"population": 733156
+},
+{
+"name": "Hamilton",
+"province": "Ontario",
+"latitude": 43.2567,
+"longitude": -79.8692,
+"population": 729560
+},
+{
+"name": "Mississauga",
+"province": "Ontario",
+"latitude": 43.6,
+"longitude": -79.65,
+"population": 717961
+},
+{
+"name": "Brampton",
+"province": "Ontario",
+"latitude": 43.6833,
+"longitude": -79.7667,
+"population": 656480
+},
+{
+"name": "Surrey",
+"province": "British Columbia",
+"latitude": 49.19,
+"longitude": -122.8489,
+"population": 568322
+},
+{
+"name": "Kitchener",
+"province": "Ontario",
+"latitude": 43.4186,
+"longitude": -80.4728,
+"population": 522888
+},
+{
+"name": "Halifax",
+"province": "Nova Scotia",
+"latitude": 44.6475,
+"longitude": -63.5906,
+"population": 439819
+},
+{
+"name": "Laval",
+"province": "Quebec",
+"latitude": 45.5833,
+"longitude": -73.75,
+"population": 438366
+},
+{
+"name": "London",
+"province": "Ontario",
+"latitude": 42.9836,
+"longitude": -81.2497,
+"population": 423369
+},
+{
+"name": "Victoria",
+"province": "British Columbia",
+"latitude": 48.4283,
+"longitude": -123.3647,
+"population": 363222
+},
+{
+"name": "Markham",
+"province": "Ontario",
+"latitude": 43.8767,
+"longitude": -79.2633,
+"population": 338503
+},
+{
+"name": "Oshawa",
+"province": "Ontario",
+"latitude": 43.9,
+"longitude": -78.85,
+"population": 335949
+},
+{
+"name": "Vaughan",
+"province": "Ontario",
+"latitude": 43.8333,
+"longitude": -79.5,
+"population": 323103
+},
+{
+"name": "Windsor",
+"province": "Ontario",
+"latitude": 42.2833,
+"longitude": -83.0,
+"population": 306519
+},
+{
+"name": "Gatineau",
+"province": "Quebec",
+"latitude": 45.4833,
+"longitude": -75.65,
+"population": 291041
+},
+{
+"name": "Saskatoon",
+"province": "Saskatchewan",
+"latitude": 52.1333,
+"longitude": -106.6833,
+"population": 266141
+},
+{
+"name": "Longueuil",
+"province": "Quebec",
+"latitude": 45.5333,
+"longitude": -73.5167,
+"population": 254483
+},
+{
+"name": "Burnaby",
+"province": "British Columbia",
+"latitude": 49.2667,
+"longitude": -122.9667,
+"population": 249125
+},
+{
+"name": "St. Catharines",
+"province": "Ontario",
+"latitude": 43.1833,
+"longitude": -79.2333,
+"population": 242460
+},
+{
+"name": "Regina",
+"province": "Saskatchewan",
+"latitude": 50.4547,
+"longitude": -104.6067,
+"population": 226404
+},
+{
+"name": "Oakville",
+"province": "Ontario",
+"latitude": 43.45,
+"longitude": -79.6833,
+"population": 213759
+},
+{
+"name": "Richmond",
+"province": "British Columbia",
+"latitude": 49.1667,
+"longitude": -123.1333,
+"population": 209937
+},
+{
+"name": "Richmond Hill",
+"province": "Ontario",
+"latitude": 43.8667,
+"longitude": -79.4333,
+"population": 202022
+}
+]
