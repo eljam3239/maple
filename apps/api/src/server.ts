@@ -1,6 +1,8 @@
 import "dotenv/config";
 import Fastify from "fastify";
 import { getOrCreateDailyPuzzle } from "./services/puzzle";
+import { evaluateGuess } from "./services/guess";
+
 
 const app = Fastify();
 
@@ -20,5 +22,22 @@ app.get("/puzzle/today", async (req, res) => {
     // DO NOT send city name to client
     puzzleId: puzzle.cityId,
   });
+});
+
+app.post("/guess", async (req, res) => {
+  try {
+    const { guess } = req.body as { guess?: string };
+
+    if (!guess) {
+      return res.status(400).send({ error: "Missing guess" });
+    }
+
+    const result = await evaluateGuess(guess);
+
+    res.send(result);
+
+  } catch (err: any) {
+    res.status(400).send({ error: err.message });
+  }
 });
 
