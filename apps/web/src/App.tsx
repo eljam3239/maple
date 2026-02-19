@@ -10,19 +10,52 @@ interface GuessResult {
   populationHint: 'larger' | 'smaller' | 'equal'
 }
 
+async function getOrCreatePlayerId(): Promise<string> {
+  const stored = localStorage.getItem('maple-playerId')
+  if (stored) return stored
+
+  const res = await fetch('/api/player', { method: 'POST' })
+  const data = await res.json()
+  localStorage.setItem('maple-playerId', data.playerId)
+  return data.playerId
+}
+
 function App() {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [guess, setGuess] = useState('')
   const [guesses, setGuesses] = useState<GuessResult[]>([])
   const [error, setError] = useState<string | null>(null)
   const [solved, setSolved] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/session', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => setSessionId(data.sessionId))
-      .catch(() => setError('Failed to create session'))
+    async function init() {
+      try {
+        const playerId = await getOrCreatePlayerId()
+
+        const res = await fetch('/api/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ playerId }),
+        })
+        const data = await res.json()
+
+        setSessionId(data.sessionId)
+
+        if (data.guesses && data.guesses.length > 0) {
+          setGuesses(data.guesses)
+        }
+
+        if (data.completed) {
+          setSolved(true)
+        }
+      } catch {
+        setError('Failed to start session')
+      } finally {
+        setLoading(false)
+      }
+    }
+    init()
   }, [])
 
   async function handleGuess(e: React.FormEvent) {
@@ -58,62 +91,67 @@ function App() {
     }
   }
 
+  if (loading && !sessionId) {
+    return (
+      <div className="app">
+        <h1>🍁 Maple</h1>
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="app">
       <h1>🍁 Maple</h1>
 
-      {!sessionId ? (
-        <p>Starting session...</p>
-      ) : (
-        <>
-          <form onSubmit={handleGuess} className="guess-form">
-            <input
-              type="text"
-              value={guess}
-              onChange={e => setGuess(e.target.value)}
-              placeholder="Guess a Canadian city..."
-              disabled={solved || loading}
-            />
-            <button type="submit" disabled={solved || loading || !guess.trim()}>
-              {loading ? '...' : 'Guess'}
-            </button>
-          </form>
+      {solved && (
+        <p className="success">🎉 You got it in {guesses.length} guess{guesses.length > 1 ? 'es' : ''}!</p>
+      )}
 
-          {error && <p className="error">{error}</p>}
+      {!solved && (
+        <form onSubmit={handleGuess} className="guess-form">
+          <input
+            type="text"
+            value={guess}
+            onChange={e => setGuess(e.target.value)}
+            placeholder="Guess a Canadian city..."
+            disabled={loading}
+          />
+          <button type="submit" disabled={loading || !guess.trim()}>
+            {loading ? '...' : 'Guess'}
+          </button>
+        </form>
+      )}
 
-          {solved && (
-            <p className="success">🎉 You got it in {guesses.length} guess{guesses.length > 1 ? 'es' : ''}!</p>
-          )}
+      {error && <p className="error">{error}</p>}
 
-          {guesses.length > 0 && (
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>City</th>
-                  <th>Correct</th>
-                  <th>Province</th>
-                  <th>Distance</th>
-                  <th>Direction</th>
-                  <th>Population</th>
-                </tr>
-              </thead>
-              <tbody>
-                {guesses.map((g, i) => (
-                  <tr key={i} className={g.correct ? 'correct-row' : ''}>
-                    <td>{i + 1}</td>
-                    <td>{g.city}</td>
-                    <td>{g.correct ? '✅' : '❌'}</td>
-                    <td>{g.provinceMatch ? '✅' : '❌'}</td>
-                    <td>{g.distanceKm} km</td>
-                    <td>{g.direction}</td>
-                    <td>{g.correct ? '—' : g.populationHint === 'larger' ? '⬆️ larger' : g.populationHint === 'smaller' ? '⬇️ smaller' : '='}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </>
+      {guesses.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>City</th>
+              <th>Correct</th>
+              <th>Province</th>
+              <th>Distance</th>
+              <th>Direction</th>
+              <th>Population</th>
+            </tr>
+          </thead>
+          <tbody>
+            {guesses.map((g, i) => (
+              <tr key={i} className={g.correct ? 'correct-row' : ''}>
+                <td>{i + 1}</td>
+                <td>{g.city}</td>
+                <td>{g.correct ? '✅' : '❌'}</td>
+                <td>{g.provinceMatch ? '✅' : '❌'}</td>
+                <td>{g.distanceKm} km</td>
+                <td>{g.direction}</td>
+                <td>{g.correct ? '—' : g.populationHint === 'larger' ? '⬆️ larger' : g.populationHint === 'smaller' ? '⬇️ smaller' : '='}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   )

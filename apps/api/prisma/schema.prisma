@@ -32,13 +32,23 @@ model DailyPuzzle {
   city		City	 @relation(fields: [cityId], references: [id])
 }
 
+model Player {
+  id		String	      @id @default(cuid())
+  createdAt	DateTime      @default(now())
+  sessions	GameSession[]
+}
+
 model GameSession {
   id		String	 @id @default(cuid())
+  playerId	String
   puzzleDate	DateTime
   targetCityId	Int
   createdAt	DateTime @default(now())
   completed	Boolean  @default(false)
   guesses	Guess[]
+
+  player	Player	 @relation(fields: [playerId], references: [id])
+  @@unique([playerId, puzzleDate])
 }
 
 model Guess {
