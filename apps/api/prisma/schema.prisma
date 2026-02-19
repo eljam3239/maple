@@ -23,6 +23,7 @@ model City {
   enabled	Boolean @default(true)
   @@unique([name, province])
   puzzle 	DailyPuzzle[]
+  guesses	Guess[]
 }
 
 model DailyPuzzle {
@@ -31,24 +32,24 @@ model DailyPuzzle {
   city		City	 @relation(fields: [cityId], references: [id])
 }
 
-model Player {
-  id 		String   @id @default(uuid())
+model GameSession {
+  id		String	 @id @default(cuid())
+  puzzleDate	DateTime
+  targetCityId	Int
   createdAt	DateTime @default(now())
-  currentStreak Int      @default(0)
-  maxStreak	Int	 @default(0)
-  lastPlayDate  DateTime?
-  session       GameSession[]
+  completed	Boolean  @default(false)
+  guesses	Guess[]
 }
 
-model GameSession {
-  id		Int 	 @id @default(autoincrement())
-  playerId	String
-  player	Player   @relation(fields: [playerId], references: [id])
-  date		DateTime
-  completed	Boolean  @default(false)
-  won		Boolean?
-  attempts	Int	 @default(0)
+model Guess {
+  id		String	 @id @default(cuid())
+  sessionId	String
+  cityId	Int
+  distanceKm	Float
+  direction	String
+  correct	Boolean
   createdAt	DateTime @default(now())
 
-  @@unique([playerId, date])
+  session	GameSession @relation(fields: [sessionId], references: [id])
+  city		City	   @relation(fields: [cityId], references: [id])
 }
