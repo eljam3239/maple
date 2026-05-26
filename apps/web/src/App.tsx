@@ -1,7 +1,25 @@
-import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Tooltip } from 'react-leaflet'
+import { useState, useEffect, useMemo } from 'react'
+import { MapContainer, TileLayer, CircleMarker, Tooltip, GeoJSON, Polygon, useMap } from 'react-leaflet'
+import L, { LatLngBoundsExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
+
+const WORLD_RING: [number, number][] = [[-90, -180], [-90, 180], [90, 180], [90, -180]]
+
+function extractRings(geojson: any): [number, number][][] {
+  const rings: [number, number][][] = []
+  for (const feature of geojson.features ?? []) {
+    const geom = feature.geometry ?? feature
+    if (geom.type === 'Polygon') {
+      rings.push(geom.coordinates[0].map(([lon, lat]: [number, number]) => [lat, lon] as [number, number]))
+    } else if (geom.type === 'MultiPolygon') {
+      for (const polygon of geom.coordinates) {
+        rings.push(polygon[0].map(([lon, lat]: [number, number]) => [lat, lon] as [number, number]))
+      }
+    }
+  }
+  return rings
+}
 
 interface GuessResult {
   city: string
@@ -9,22 +27,55 @@ interface GuessResult {
   distanceKm: number
   direction: string
   provinceMatch: boolean
+  province: string
+  provinceDistance: number
   populationHint: 'larger' | 'smaller' | 'equal'
   latitude: number
   longitude: number
 }
 
-// Returns a color from red → orange → yellow → green based on distance
-// 0 km = bold green, ~MAX_DISTANCE km or more = bold red
-function distanceToColor(distanceKm: number, correct: boolean): string {
-  if (correct) return '#2e7d32'
-  // Canada is ~5500km across; cap at 5000km for the gradient
-  const maxDist = 5000
-  const t = Math.min(distanceKm / maxDist, 1) // 0 = close, 1 = far
+function getProvinceStyle(dist: number | undefined) {
+  const fillColor =
+    dist === undefined ? '#888' :
+    dist === 0 ? '#800026' :
+    dist === 1 ? '#E31A1C' :
+    dist === 2 ? '#FED976' :
+    '#FFEDA0'
+  return {
+    fillColor,
+    fillOpacity: dist === undefined ? 0.15 : 0.75,
+    weight: 1,
+    color: '#555',
+    dashArray: '3',
+    opacity: 1,
+  }
+}
 
-  // Interpolate hue: 120 (green) → 60 (yellow) → 30 (orange) → 0 (red)
-  const hue = Math.round(120 * (1 - t))
-  return `hsl(${hue}, 100%, 40%)`
+const LEGEND_ITEMS = [
+  { color: '#800026', label: 'Same province' },
+  { color: '#E31A1C', label: '1 province away' },
+  { color: '#FED976', label: '2 provinces away' },
+  { color: '#FFEDA0', label: '3+ provinces away' },
+]
+
+function MapLegend() {
+  const map = useMap()
+  useEffect(() => {
+    const legend = L.control({ position: 'bottomright' })
+    legend.onAdd = () => {
+      const div = L.DomUtil.create('div', 'map-legend')
+      div.innerHTML =
+        '<strong>Province distance</strong>' +
+        LEGEND_ITEMS.map(
+          ({ color, label }) =>
+            `<div class="legend-row"><span class="legend-swatch" style="background:${color}"></span>${label}</div>`
+        ).join('')
+      return div
+    }
+    legend.addTo(map)
+    return () => { legend.remove() }
+  }, [map])
+  return null
 }
 
 async function getOrCreatePlayerId(): Promise<string> {
@@ -44,6 +95,25 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [solved, setSolved] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [canadaGeoJSON, setCanadaGeoJSON] = useState<object | null>(null)
+  const [provincesGeoJSON, setProvincesGeoJSON] = useState<object | null>(null)
+
+  useEffect(() => {
+    fetch('/canada.geojson').then(r => r.json()).then(setCanadaGeoJSON)
+    fetch('/canada-provinces.geojson').then(r => r.json()).then(setProvincesGeoJSON)
+  }, [])
+
+  // Best (lowest) provinceDistance seen per province name
+  const provinceDistances = useMemo(() => {
+    const result: Record<string, number> = {}
+    for (const g of guesses) {
+      const prev = result[g.province]
+      if (prev === undefined || g.provinceDistance < prev) {
+        result[g.province] = g.provinceDistance
+      }
+    }
+    return result
+  }, [guesses])
 
   useEffect(() => {
     async function init() {
@@ -143,23 +213,57 @@ function App() {
       {error && <p className="error">{error}</p>}
 
       <div className="map-container">
-        <MapContainer center={[56, -96]} zoom={4} scrollWheelZoom={true} style={{ height: '600px', width: '100%' }}>
+        <MapContainer
+          center={[56, -96]}
+          zoom={4}
+          scrollWheelZoom={true}
+          style={{ height: '600px', width: '100%' }}
+          maxBounds={[[41.0, -141.0], [83.0, -52.0]] as LatLngBoundsExpression}
+          maxBoundsViscosity={1.0}
+        >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          {/* Dark mask outside Canada */}
+          {canadaGeoJSON && (
+            <Polygon
+              positions={[WORLD_RING, ...extractRings(canadaGeoJSON)]}
+              pathOptions={{ stroke: false, fillColor: '#000', fillOpacity: 0.6 }}
+            />
+          )}
+          {/* Province choropleth — key forces remount on each guess so styles refresh */}
+          {provincesGeoJSON && (
+            <GeoJSON
+              key={guesses.length}
+              data={provincesGeoJSON as any}
+              onEachFeature={(feature, layer) => {
+                const name: string = feature?.properties?.name
+                ;(layer as L.Path).setStyle(getProvinceStyle(provinceDistances[name]))
+                layer.on({
+                  mouseover: (e) => {
+                    e.target.setStyle({ weight: 3, color: '#333', dashArray: '' })
+                    e.target.bringToFront()
+                  },
+                  mouseout: (e) => {
+                    e.target.setStyle(getProvinceStyle(provinceDistances[name]))
+                  },
+                })
+              }}
+            />
+          )}
+          <MapLegend />
           {guesses.map((g, i) => {
-            const color = distanceToColor(g.distanceKm, g.correct)
             return (
               <CircleMarker
                 key={i}
                 center={[g.latitude, g.longitude]}
-                radius={8}
+                radius={4}
                 pathOptions={{
-                  color,
-                  fillColor: color,
-                  fillOpacity: 0.8,
-                }}
+                    color: '#000',
+                    fillColor: '#000',
+                    fillOpacity: 0.8,
+                  }}
               >
                 <Tooltip>{g.city}</Tooltip>
               </CircleMarker>

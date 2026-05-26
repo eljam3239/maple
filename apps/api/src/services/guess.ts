@@ -1,6 +1,7 @@
 import { PrismaClient } from "../generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { distanceKm, getDirection } from "../utils/geo";
+import { computeProvinceDistance } from "../utils/provinces";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -87,6 +88,8 @@ export async function evaluateGuess(sessionId: string, cityName: string) {
     distanceKm: distance,
     direction,
     provinceMatch: guessedCity.province === targetCity.province,
+    province: guessedCity.province,
+    provinceDistance: computeProvinceDistance(guessedCity.province, targetCity.province),
     populationHint,
     latitude: guessedCity.latitude,
     longitude: guessedCity.longitude,

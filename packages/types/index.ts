@@ -3,6 +3,8 @@ export interface GuessResponse {
   distanceKm: number;
   direction: string;
   provinceMatch: boolean;
+  province: string;
+  provinceDistance: number;
   populationHint: "larger" | "smaller" | "equal";
 }
 
