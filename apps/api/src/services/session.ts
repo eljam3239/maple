@@ -1,6 +1,7 @@
 import { PrismaClient } from "../generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { getOrCreateDailyPuzzle } from "./puzzle";
+import { computeProvinceDistance } from "../utils/provinces";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -58,6 +59,8 @@ export async function getOrCreateSession(playerId: string) {
           distanceKm: g.distanceKm,
           direction: g.direction,
           provinceMatch: targetCity ? g.city.province === targetCity.province : false,
+          province: g.city.province,
+          provinceDistance: targetCity ? computeProvinceDistance(g.city.province, targetCity.province) : 99,
           populationHint,
           latitude: g.city.latitude,
           longitude: g.city.longitude,
