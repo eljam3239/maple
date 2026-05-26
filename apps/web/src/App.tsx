@@ -1,25 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Tooltip, GeoJSON, Polygon, useMap } from 'react-leaflet'
-import L, { LatLngBoundsExpression } from 'leaflet'
+import { MapContainer, TileLayer, CircleMarker, Tooltip, GeoJSON, useMap } from 'react-leaflet'
+import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
-
-const WORLD_RING: [number, number][] = [[-90, -180], [-90, 180], [90, 180], [90, -180]]
-
-function extractRings(geojson: any): [number, number][][] {
-  const rings: [number, number][][] = []
-  for (const feature of geojson.features ?? []) {
-    const geom = feature.geometry ?? feature
-    if (geom.type === 'Polygon') {
-      rings.push(geom.coordinates[0].map(([lon, lat]: [number, number]) => [lat, lon] as [number, number]))
-    } else if (geom.type === 'MultiPolygon') {
-      for (const polygon of geom.coordinates) {
-        rings.push(polygon[0].map(([lon, lat]: [number, number]) => [lat, lon] as [number, number]))
-      }
-    }
-  }
-  return rings
-}
 
 interface GuessResult {
   city: string
@@ -95,11 +78,9 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const [solved, setSolved] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [canadaGeoJSON, setCanadaGeoJSON] = useState<object | null>(null)
   const [provincesGeoJSON, setProvincesGeoJSON] = useState<object | null>(null)
 
   useEffect(() => {
-    fetch('/canada.geojson').then(r => r.json()).then(setCanadaGeoJSON)
     fetch('/canada-provinces.geojson').then(r => r.json()).then(setProvincesGeoJSON)
   }, [])
 
@@ -218,20 +199,11 @@ function App() {
           zoom={4}
           scrollWheelZoom={true}
           style={{ height: '600px', width: '100%' }}
-          maxBounds={[[41.0, -141.0], [83.0, -52.0]] as LatLngBoundsExpression}
-          maxBoundsViscosity={1.0}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {/* Dark mask outside Canada */}
-          {canadaGeoJSON && (
-            <Polygon
-              positions={[WORLD_RING, ...extractRings(canadaGeoJSON)]}
-              pathOptions={{ stroke: false, fillColor: '#000', fillOpacity: 0.6 }}
-            />
-          )}
           {/* Province choropleth — key forces remount on each guess so styles refresh */}
           {provincesGeoJSON && (
             <GeoJSON
