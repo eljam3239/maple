@@ -1,0 +1,1052 @@
+[
+  {
+    "name": "Toronto",
+    "province": "Ontario",
+    "latitude": 43.7417,
+    "longitude": -79.3733,
+    "population": 5647656
+  },
+  {
+    "name": "Montreal",
+    "province": "Quebec",
+    "latitude": 45.5089,
+    "longitude": -73.5617,
+    "population": 3675219
+  },
+  {
+    "name": "Vancouver",
+    "province": "British Columbia",
+    "latitude": 49.25,
+    "longitude": -123.1,
+    "population": 2426160
+  },
+  {
+    "name": "Calgary",
+    "province": "Alberta",
+    "latitude": 51.05,
+    "longitude": -114.0667,
+    "population": 1306784
+  },
+  {
+    "name": "Edmonton",
+    "province": "Alberta",
+    "latitude": 53.5344,
+    "longitude": -113.4903,
+    "population": 1151635
+  },
+  {
+    "name": "Ottawa",
+    "province": "Ontario",
+    "latitude": 45.4247,
+    "longitude": -75.695,
+    "population": 1068821
+  },
+  {
+    "name": "Winnipeg",
+    "province": "Manitoba",
+    "latitude": 49.8844,
+    "longitude": -97.1464,
+    "population": 758515
+  },
+  {
+    "name": "Quebec City",
+    "province": "Quebec",
+    "latitude": 46.8139,
+    "longitude": -71.2081,
+    "population": 733156
+  },
+  {
+    "name": "Hamilton",
+    "province": "Ontario",
+    "latitude": 43.2567,
+    "longitude": -79.8692,
+    "population": 729560
+  },
+  {
+    "name": "Mississauga",
+    "province": "Ontario",
+    "latitude": 43.6,
+    "longitude": -79.65,
+    "population": 717961
+  },
+  {
+    "name": "Brampton",
+    "province": "Ontario",
+    "latitude": 43.6833,
+    "longitude": -79.7667,
+    "population": 656480
+  },
+  {
+    "name": "Surrey",
+    "province": "British Columbia",
+    "latitude": 49.19,
+    "longitude": -122.8489,
+    "population": 568322
+  },
+  {
+    "name": "Kitchener",
+    "province": "Ontario",
+    "latitude": 43.4186,
+    "longitude": -80.4728,
+    "population": 522888
+  },
+  {
+    "name": "Halifax",
+    "province": "Nova Scotia",
+    "latitude": 44.6475,
+    "longitude": -63.5906,
+    "population": 439819
+  },
+  {
+    "name": "Laval",
+    "province": "Quebec",
+    "latitude": 45.5833,
+    "longitude": -73.75,
+    "population": 438366
+  },
+  {
+    "name": "London",
+    "province": "Ontario",
+    "latitude": 42.9836,
+    "longitude": -81.2497,
+    "population": 423369
+  },
+  {
+    "name": "Victoria",
+    "province": "British Columbia",
+    "latitude": 48.4283,
+    "longitude": -123.3647,
+    "population": 363222
+  },
+  {
+    "name": "Markham",
+    "province": "Ontario",
+    "latitude": 43.8767,
+    "longitude": -79.2633,
+    "population": 338503
+  },
+  {
+    "name": "Oshawa",
+    "province": "Ontario",
+    "latitude": 43.9,
+    "longitude": -78.85,
+    "population": 335949
+  },
+  {
+    "name": "Vaughan",
+    "province": "Ontario",
+    "latitude": 43.8333,
+    "longitude": -79.5,
+    "population": 323103
+  },
+  {
+    "name": "Windsor",
+    "province": "Ontario",
+    "latitude": 42.2833,
+    "longitude": -83.0,
+    "population": 306519
+  },
+  {
+    "name": "Gatineau",
+    "province": "Quebec",
+    "latitude": 45.4833,
+    "longitude": -75.65,
+    "population": 291041
+  },
+  {
+    "name": "Saskatoon",
+    "province": "Saskatchewan",
+    "latitude": 52.1333,
+    "longitude": -106.6833,
+    "population": 266141
+  },
+  {
+    "name": "Longueuil",
+    "province": "Quebec",
+    "latitude": 45.5333,
+    "longitude": -73.5167,
+    "population": 254483
+  },
+  {
+    "name": "Burnaby",
+    "province": "British Columbia",
+    "latitude": 49.2667,
+    "longitude": -122.9667,
+    "population": 249125
+  },
+  {
+    "name": "St. Catharines",
+    "province": "Ontario",
+    "latitude": 43.1833,
+    "longitude": -79.2333,
+    "population": 242460
+  },
+  {
+    "name": "Regina",
+    "province": "Saskatchewan",
+    "latitude": 50.4547,
+    "longitude": -104.6067,
+    "population": 226404
+  },
+  {
+    "name": "Oakville",
+    "province": "Ontario",
+    "latitude": 43.45,
+    "longitude": -79.6833,
+    "population": 213759
+  },
+  {
+    "name": "Richmond",
+    "province": "British Columbia",
+    "latitude": 49.1667,
+    "longitude": -123.1333,
+    "population": 209937
+  },
+  {
+    "name": "Richmond Hill",
+    "province": "Ontario",
+    "latitude": 43.8667,
+    "longitude": -79.4333,
+    "population": 202022
+  },
+  {
+    "name": "Burlington",
+    "province": "Ontario",
+    "latitude": 43.3167,
+    "longitude": -79.8,
+    "population": 186948
+  },
+  {
+    "name": "St. John's",
+    "province": "Newfoundland and Labrador",
+    "latitude": 47.4817,
+    "longitude": -52.7971,
+    "population": 185565
+  },
+  {
+    "name": "Kelowna",
+    "province": "British Columbia",
+    "latitude": 49.8881,
+    "longitude": -119.4956,
+    "population": 181380
+  },
+  {
+    "name": "Sherbrooke",
+    "province": "Quebec",
+    "latitude": 45.4,
+    "longitude": -71.9,
+    "population": 172950
+  },
+  {
+    "name": "Sudbury",
+    "province": "Ontario",
+    "latitude": 46.49,
+    "longitude": -81.01,
+    "population": 166004
+  },
+  {
+    "name": "Barrie",
+    "province": "Ontario",
+    "latitude": 44.3711,
+    "longitude": -79.6769,
+    "population": 154676
+  },
+  {
+    "name": "Abbotsford",
+    "province": "British Columbia",
+    "latitude": 49.05,
+    "longitude": -122.3167,
+    "population": 153524
+  },
+  {
+    "name": "Levis",
+    "province": "Quebec",
+    "latitude": 46.8,
+    "longitude": -71.1833,
+    "population": 149683
+  },
+  {
+    "name": "Coquitlam",
+    "province": "British Columbia",
+    "latitude": 49.2839,
+    "longitude": -122.7919,
+    "population": 148625
+  },
+  {
+    "name": "Saguenay",
+    "province": "Quebec",
+    "latitude": 48.4167,
+    "longitude": -71.0667,
+    "population": 144723
+  },
+  {
+    "name": "Guelph",
+    "province": "Ontario",
+    "latitude": 43.55,
+    "longitude": -80.25,
+    "population": 144356
+  },
+  {
+    "name": "Trois-Rivieres",
+    "province": "Quebec",
+    "latitude": 46.35,
+    "longitude": -72.55,
+    "population": 139163
+  },
+  {
+    "name": "Whitby",
+    "province": "Ontario",
+    "latitude": 43.8833,
+    "longitude": -78.9417,
+    "population": 138501
+  },
+  {
+    "name": "Cambridge",
+    "province": "Ontario",
+    "latitude": 43.3972,
+    "longitude": -80.3114,
+    "population": 138479
+  },
+  {
+    "name": "Milton",
+    "province": "Ontario",
+    "latitude": 43.5083,
+    "longitude": -79.8833,
+    "population": 132979
+  },
+  {
+    "name": "Ajax",
+    "province": "Ontario",
+    "latitude": 43.8583,
+    "longitude": -79.0364,
+    "population": 126666
+  },
+  {
+    "name": "Waterloo",
+    "province": "Ontario",
+    "latitude": 43.4667,
+    "longitude": -80.5167,
+    "population": 121436
+  },
+  {
+    "name": "Terrebonne",
+    "province": "Quebec",
+    "latitude": 45.7,
+    "longitude": -73.6333,
+    "population": 119944
+  },
+  {
+    "name": "Moncton",
+    "province": "New Brunswick",
+    "latitude": 46.1328,
+    "longitude": -64.7714,
+    "population": 119785
+  },
+  {
+    "name": "Saanich",
+    "province": "British Columbia",
+    "latitude": 48.484,
+    "longitude": -123.381,
+    "population": 117735
+  },
+  {
+    "name": "White Rock",
+    "province": "British Columbia",
+    "latitude": 49.025,
+    "longitude": -122.8028,
+    "population": 109167
+  },
+  {
+    "name": "Thunder Bay",
+    "province": "Ontario",
+    "latitude": 48.3822,
+    "longitude": -89.2461,
+    "population": 108843
+  },
+  {
+    "name": "Delta",
+    "province": "British Columbia",
+    "latitude": 49.0847,
+    "longitude": -123.0586,
+    "population": 108455
+  },
+  {
+    "name": "Nanaimo",
+    "province": "British Columbia",
+    "latitude": 49.1642,
+    "longitude": -123.9364,
+    "population": 106079
+  },
+  {
+    "name": "Brantford",
+    "province": "Ontario",
+    "latitude": 43.1667,
+    "longitude": -80.25,
+    "population": 104688
+  },
+  {
+    "name": "Chatham",
+    "province": "Ontario",
+    "latitude": 42.4229,
+    "longitude": -82.1324,
+    "population": 103988
+  },
+  {
+    "name": "Clarington",
+    "province": "Ontario",
+    "latitude": 43.935,
+    "longitude": -78.6083,
+    "population": 101427
+  },
+  {
+    "name": "Saint-Jerome",
+    "province": "Quebec",
+    "latitude": 45.7833,
+    "longitude": -74.0,
+    "population": 100859
+  },
+  {
+    "name": "Red Deer",
+    "province": "Alberta",
+    "latitude": 52.2681,
+    "longitude": -113.8111,
+    "population": 100844
+  },
+  {
+    "name": "Pickering",
+    "province": "Ontario",
+    "latitude": 43.8354,
+    "longitude": -79.089,
+    "population": 99186
+  },
+  {
+    "name": "Lethbridge",
+    "province": "Alberta",
+    "latitude": 49.6942,
+    "longitude": -112.8328,
+    "population": 98406
+  },
+  {
+    "name": "Kamloops",
+    "province": "British Columbia",
+    "latitude": 50.6761,
+    "longitude": -120.3408,
+    "population": 97902
+  },
+  {
+    "name": "Saint-Jean-sur-Richelieu",
+    "province": "Quebec",
+    "latitude": 45.3167,
+    "longitude": -73.2667,
+    "population": 97873
+  },
+  {
+    "name": "Niagara Falls",
+    "province": "Ontario",
+    "latitude": 43.06,
+    "longitude": -79.1067,
+    "population": 94415
+  },
+  {
+    "name": "Cape Breton",
+    "province": "Nova Scotia",
+    "latitude": 46.1389,
+    "longitude": -60.1931,
+    "population": 93694
+  },
+  {
+    "name": "Chilliwack",
+    "province": "British Columbia",
+    "latitude": 49.1577,
+    "longitude": -121.9509,
+    "population": 93203
+  },
+  {
+    "name": "Brossard",
+    "province": "Quebec",
+    "latitude": 45.4667,
+    "longitude": -73.45,
+    "population": 91525
+  },
+  {
+    "name": "Maple Ridge",
+    "province": "British Columbia",
+    "latitude": 49.2167,
+    "longitude": -122.6,
+    "population": 90990
+  },
+  {
+    "name": "Newmarket",
+    "province": "Ontario",
+    "latitude": 44.05,
+    "longitude": -79.4667,
+    "population": 87942
+  },
+  {
+    "name": "Repentigny",
+    "province": "Quebec",
+    "latitude": 45.7333,
+    "longitude": -73.4667,
+    "population": 86100
+  },
+  {
+    "name": "Peterborough",
+    "province": "Ontario",
+    "latitude": 44.3,
+    "longitude": -78.3167,
+    "population": 84793
+  },
+  {
+    "name": "Drummondville",
+    "province": "Quebec",
+    "latitude": 45.8833,
+    "longitude": -72.4833,
+    "population": 79258
+  },
+  {
+    "name": "Kawartha Lakes",
+    "province": "Ontario",
+    "latitude": 44.35,
+    "longitude": -78.75,
+    "population": 79247
+  },
+  {
+    "name": "New Westminster",
+    "province": "British Columbia",
+    "latitude": 49.2069,
+    "longitude": -122.9111,
+    "population": 78916
+  },
+  {
+    "name": "Prince George",
+    "province": "British Columbia",
+    "latitude": 53.9169,
+    "longitude": -122.7494,
+    "population": 76708
+  },
+  {
+    "name": "Caledon",
+    "province": "Ontario",
+    "latitude": 43.8667,
+    "longitude": -79.8667,
+    "population": 76581
+  },
+  {
+    "name": "Chateauguay",
+    "province": "Quebec",
+    "latitude": 45.38,
+    "longitude": -73.75,
+    "population": 75891
+  },
+  {
+    "name": "Belleville",
+    "province": "Ontario",
+    "latitude": 44.1667,
+    "longitude": -77.3833,
+    "population": 75052
+  },
+  {
+    "name": "Airdrie",
+    "province": "Alberta",
+    "latitude": 51.2917,
+    "longitude": -114.0144,
+    "population": 74100
+  },
+  {
+    "name": "Sarnia",
+    "province": "Ontario",
+    "latitude": 42.9994,
+    "longitude": -82.3089,
+    "population": 73944
+  },
+  {
+    "name": "Wood Buffalo",
+    "province": "Alberta",
+    "latitude": 57.6042,
+    "longitude": -111.3284,
+    "population": 72326
+  },
+  {
+    "name": "Sault Ste. Marie",
+    "province": "Ontario",
+    "latitude": 46.5333,
+    "longitude": -84.35,
+    "population": 72051
+  },
+  {
+    "name": "Saint John",
+    "province": "New Brunswick",
+    "latitude": 45.2806,
+    "longitude": -66.0761,
+    "population": 69895
+  },
+  {
+    "name": "Welland",
+    "province": "Ontario",
+    "latitude": 42.9833,
+    "longitude": -79.2333,
+    "population": 69302
+  },
+  {
+    "name": "Granby",
+    "province": "Quebec",
+    "latitude": 45.4,
+    "longitude": -72.7333,
+    "population": 69025
+  },
+  {
+    "name": "St. Albert",
+    "province": "Alberta",
+    "latitude": 53.6303,
+    "longitude": -113.6258,
+    "population": 68232
+  },
+  {
+    "name": "Fredericton",
+    "province": "New Brunswick",
+    "latitude": 45.9636,
+    "longitude": -66.6431,
+    "population": 64614
+  },
+  {
+    "name": "Grande Prairie",
+    "province": "Alberta",
+    "latitude": 55.1708,
+    "longitude": -118.7947,
+    "population": 64141
+  },
+  {
+    "name": "Medicine Hat",
+    "province": "Alberta",
+    "latitude": 50.0417,
+    "longitude": -110.6775,
+    "population": 63382
+  },
+  {
+    "name": "Halton Hills",
+    "province": "Ontario",
+    "latitude": 43.63,
+    "longitude": -79.95,
+    "population": 62951
+  },
+  {
+    "name": "Aurora",
+    "province": "Ontario",
+    "latitude": 44.0,
+    "longitude": -79.4667,
+    "population": 62057
+  },
+  {
+    "name": "Port Coquitlam",
+    "province": "British Columbia",
+    "latitude": 49.2625,
+    "longitude": -122.7811,
+    "population": 61498
+  },
+  {
+    "name": "Mirabel",
+    "province": "Quebec",
+    "latitude": 45.65,
+    "longitude": -74.0833,
+    "population": 61108
+  },
+  {
+    "name": "Blainville",
+    "province": "Quebec",
+    "latitude": 45.67,
+    "longitude": -73.88,
+    "population": 59819
+  },
+  {
+    "name": "Lac-Brome",
+    "province": "Quebec",
+    "latitude": 45.2167,
+    "longitude": -72.5167,
+    "population": 58889
+  },
+  {
+    "name": "North Vancouver",
+    "province": "British Columbia",
+    "latitude": 49.3202,
+    "longitude": -123.0699,
+    "population": 58120
+  },
+  {
+    "name": "Saint-Hyacinthe",
+    "province": "Quebec",
+    "latitude": 45.6167,
+    "longitude": -72.95,
+    "population": 57239
+  },
+  {
+    "name": "Beloeil",
+    "province": "Quebec",
+    "latitude": 45.5667,
+    "longitude": -73.2,
+    "population": 52959
+  },
+  {
+    "name": "North Bay",
+    "province": "Ontario",
+    "latitude": 46.3,
+    "longitude": -79.45,
+    "population": 52662
+  },
+  {
+    "name": "Charlottetown",
+    "province": "Prince Edward Island",
+    "latitude": 46.2403,
+    "longitude": -63.1347,
+    "population": 52390
+  },
+  {
+    "name": "Vernon",
+    "province": "British Columbia",
+    "latitude": 50.267,
+    "longitude": -119.272,
+    "population": 51896
+  },
+  {
+    "name": "Brandon",
+    "province": "Manitoba",
+    "latitude": 49.8483,
+    "longitude": -99.95,
+    "population": 51313
+  },
+  {
+    "name": "Mascouche",
+    "province": "Quebec",
+    "latitude": 45.75,
+    "longitude": -73.6,
+    "population": 51183
+  },
+  {
+    "name": "Stouffville",
+    "province": "Ontario",
+    "latitude": 43.9667,
+    "longitude": -79.25,
+    "population": 49864
+  },
+  {
+    "name": "Shawinigan",
+    "province": "Quebec",
+    "latitude": 46.5667,
+    "longitude": -72.75,
+    "population": 49620
+  },
+  {
+    "name": "Joliette",
+    "province": "Quebec",
+    "latitude": 46.0167,
+    "longitude": -73.45,
+    "population": 49246
+  },
+  {
+    "name": "Rimouski",
+    "province": "Quebec",
+    "latitude": 48.45,
+    "longitude": -68.53,
+    "population": 48935
+  },
+  {
+    "name": "Courtenay",
+    "province": "British Columbia",
+    "latitude": 49.6878,
+    "longitude": -124.9944,
+    "population": 48917
+  },
+  {
+    "name": "Dollard-des-Ormeaux",
+    "province": "Quebec",
+    "latitude": 45.4833,
+    "longitude": -73.8167,
+    "population": 48403
+  },
+  {
+    "name": "Cornwall",
+    "province": "Ontario",
+    "latitude": 45.0275,
+    "longitude": -74.74,
+    "population": 47845
+  },
+  {
+    "name": "Victoriaville",
+    "province": "Quebec",
+    "latitude": 46.05,
+    "longitude": -71.9667,
+    "population": 47760
+  },
+  {
+    "name": "Georgina",
+    "province": "Ontario",
+    "latitude": 44.3,
+    "longitude": -79.4333,
+    "population": 47642
+  },
+  {
+    "name": "Woodstock",
+    "province": "Ontario",
+    "latitude": 43.1306,
+    "longitude": -80.7467,
+    "population": 46705
+  },
+  {
+    "name": "Langford Station",
+    "province": "British Columbia",
+    "latitude": 48.4506,
+    "longitude": -123.5058,
+    "population": 46584
+  },
+  {
+    "name": "Quinte West",
+    "province": "Ontario",
+    "latitude": 44.1833,
+    "longitude": -77.5667,
+    "population": 46560
+  },
+  {
+    "name": "St. Thomas",
+    "province": "Ontario",
+    "latitude": 42.775,
+    "longitude": -81.1833,
+    "population": 45732
+  },
+  {
+    "name": "Saint-Eustache",
+    "province": "Quebec",
+    "latitude": 45.57,
+    "longitude": -73.9,
+    "population": 45276
+  },
+  {
+    "name": "West Vancouver",
+    "province": "British Columbia",
+    "latitude": 49.3667,
+    "longitude": -123.1667,
+    "population": 44122
+  },
+  {
+    "name": "New Tecumseth",
+    "province": "Ontario",
+    "latitude": 44.0833,
+    "longitude": -79.75,
+    "population": 43948
+  },
+  {
+    "name": "Innisfil",
+    "province": "Ontario",
+    "latitude": 44.3,
+    "longitude": -79.5833,
+    "population": 43326
+  },
+  {
+    "name": "Vaudreuil-Dorion",
+    "province": "Quebec",
+    "latitude": 45.4,
+    "longitude": -74.0333,
+    "population": 43268
+  },
+  {
+    "name": "Bradford West Gwillimbury",
+    "province": "Ontario",
+    "latitude": 44.1333,
+    "longitude": -79.6333,
+    "population": 42880
+  },
+  {
+    "name": "Salaberry-de-Valleyfield",
+    "province": "Quebec",
+    "latitude": 45.25,
+    "longitude": -74.13,
+    "population": 42787
+  },
+  {
+    "name": "Rouyn-Noranda",
+    "province": "Quebec",
+    "latitude": 48.2333,
+    "longitude": -79.0167,
+    "population": 42313
+  },
+  {
+    "name": "Boucherville",
+    "province": "Quebec",
+    "latitude": 45.6,
+    "longitude": -73.45,
+    "population": 41743
+  },
+  {
+    "name": "Mission",
+    "province": "British Columbia",
+    "latitude": 49.1337,
+    "longitude": -122.3112,
+    "population": 41519
+  },
+  {
+    "name": "Timmins",
+    "province": "Ontario",
+    "latitude": 48.4667,
+    "longitude": -81.3333,
+    "population": 41145
+  },
+  {
+    "name": "Lakeshore",
+    "province": "Ontario",
+    "latitude": 42.2399,
+    "longitude": -82.6511,
+    "population": 40410
+  },
+  {
+    "name": "Brant",
+    "province": "Ontario",
+    "latitude": 43.1167,
+    "longitude": -80.3667,
+    "population": 39474
+  },
+  {
+    "name": "Spruce Grove",
+    "province": "Alberta",
+    "latitude": 53.545,
+    "longitude": -113.9008,
+    "population": 39348
+  },
+  {
+    "name": "Campbell River",
+    "province": "British Columbia",
+    "latitude": 50.0244,
+    "longitude": -125.2475,
+    "population": 38108
+  },
+  {
+    "name": "Prince Albert",
+    "province": "Saskatchewan",
+    "latitude": 53.2,
+    "longitude": -105.75,
+    "population": 37756
+  },
+  {
+    "name": "Penticton",
+    "province": "British Columbia",
+    "latitude": 49.4911,
+    "longitude": -119.5886,
+    "population": 36893
+  },
+  {
+    "name": "Sorel-Tracy",
+    "province": "Quebec",
+    "latitude": 46.0333,
+    "longitude": -73.1167,
+    "population": 36650
+  },
+  {
+    "name": "East Kelowna",
+    "province": "British Columbia",
+    "latitude": 49.8625,
+    "longitude": -119.5833,
+    "population": 36078
+  },
+  {
+    "name": "Leamington",
+    "province": "Ontario",
+    "latitude": 42.0667,
+    "longitude": -82.5833,
+    "population": 35730
+  },
+  {
+    "name": "East Gwillimbury",
+    "province": "Ontario",
+    "latitude": 44.1333,
+    "longitude": -79.4167,
+    "population": 34637
+  },
+  {
+    "name": "Cote-Saint-Luc",
+    "province": "Quebec",
+    "latitude": 45.4687,
+    "longitude": -73.6673,
+    "population": 34504
+  },
+  {
+    "name": "Orangeville",
+    "province": "Ontario",
+    "latitude": 43.9167,
+    "longitude": -80.1167,
+    "population": 34177
+  },
+  {
+    "name": "Leduc",
+    "province": "Alberta",
+    "latitude": 53.2594,
+    "longitude": -113.5492,
+    "population": 34094
+  },
+  {
+    "name": "Moose Jaw",
+    "province": "Saskatchewan",
+    "latitude": 50.3933,
+    "longitude": -105.5519,
+    "population": 33665
+  },
+  {
+    "name": "Port Moody",
+    "province": "British Columbia",
+    "latitude": 49.2831,
+    "longitude": -122.8317,
+    "population": 33535
+  },
+  {
+    "name": "Pointe-Claire",
+    "province": "Quebec",
+    "latitude": 45.45,
+    "longitude": -73.8167,
+    "population": 33488
+  },
+  {
+    "name": "Orillia",
+    "province": "Ontario",
+    "latitude": 44.6,
+    "longitude": -79.4167,
+    "population": 33411
+  },
+  {
+    "name": "Stratford",
+    "province": "Ontario",
+    "latitude": 43.3708,
+    "longitude": -80.9819,
+    "population": 33232
+  },
+  {
+    "name": "Fort Erie",
+    "province": "Ontario",
+    "latitude": 42.9167,
+    "longitude": -79.0167,
+    "population": 32901
+  },
+  {
+    "name": "Val-d'Or",
+    "province": "Quebec",
+    "latitude": 48.1,
+    "longitude": -77.7833,
+    "population": 32752
+  },
+  {
+    "name": "LaSalle",
+    "province": "Ontario",
+    "latitude": 42.2167,
+    "longitude": -83.0667,
+    "population": 32721
+  },
+  {
+    "name": "Cochrane",
+    "province": "Alberta",
+    "latitude": 51.189,
+    "longitude": -114.467,
+    "population": 32199
+  },
+  {
+    "name": "North Cowichan",
+    "province": "British Columbia",
+    "latitude": 48.8236,
+    "longitude": -123.7192,
+    "population": 31990
+  }
+]

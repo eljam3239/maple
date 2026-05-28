@@ -1,16 +1,15 @@
 import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
-import cities from "./data/canadian_cities.json";
+import cities from "./data/canadian_cities_150.json";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
   for (const city of cities) {
-    // Destructure only the fields we need, ignoring any extra fields
     const { name, province, latitude, longitude, population } = city;
-    
+
     await prisma.city.upsert({
       where: {
         name_province: {
@@ -18,18 +17,24 @@ async function main() {
           province,
         },
       },
-      update: {}, // we could also update fields if needed, but empty for now
+      update: {
+        latitude,
+        longitude,
+        population,
+        enabled: true,
+      },
       create: {
         name,
         province,
         latitude,
         longitude,
         population,
+        enabled: true,
       },
     });
   }
 
-  console.log("Cities seeded");
+  console.log(`Cities seeded: ${cities.length}`);
 }
 
 main()
