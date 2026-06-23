@@ -49,6 +49,13 @@
     "population": 758515
   },
   {
+      "name": "Kingston",
+      "province": "Ontario",
+      "latitude": 44.2333,
+      "longitude": -76.5000,
+      "population": 152346
+  },
+  {
     "name": "Quebec City",
     "province": "Quebec",
     "latitude": 46.8139,
