@@ -1,34 +1,82 @@
 .app {
-  max-width: 980px;
-  margin: 2rem auto;
-  padding: 1rem 2rem;
+  width: 100%;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem 1rem;
   font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-h1 {
+/* Two-pane body: map + guess data sit side by side and fill remaining height */
+.game-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.guess-pane {
+  flex: 0 0 38%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.guess-empty {
+  color: #888;
   text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 720px) {
+  .app {
+    height: auto;
+    min-height: 100dvh;
+  }
+  .game-body {
+    flex-direction: column;
+  }
+  .map-container {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    height: 42vh;
+    flex: none;
+  }
+  .guess-pane {
+    flex: none;
+    overflow-y: visible;
+  }
+}
+
+.app-title {
+  text-align: center;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1;
+  margin: 0 0 0.5rem;
 }
 
 .guess-form {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin: 0 auto 0.75rem;
   max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .guess-form input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  font-size: 1.15rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
 }
 
 .guess-form button {
-  padding: 0.75rem 1.5rem;
-  font-size: 1.15rem;
+  padding: 0.65rem 1.15rem;
+  font-size: 1rem;
   cursor: pointer;
   border: none;
   border-radius: 6px;
@@ -43,18 +91,30 @@ h1 {
 
 .error {
   color: #d32f2f;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0 0.5rem;
 }
 
 .success {
   color: #2e7d32;
-  font-size: 1.2rem;
+  font-size: 0.95rem;
   text-align: center;
-  margin: 1rem 0;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.compact-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: #e8f5e9;
+  border: 1px solid #c8e6c9;
 }
 
 .map-container {
-  margin: 1rem 0;
+  flex: 1;
+  min-width: 0;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #ddd;
@@ -94,8 +154,13 @@ h1 {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
   color: #111;
+}
+
+.guess-pane thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 th, td {
@@ -110,5 +175,7 @@ th {
 }
 
 .correct-row {
-  background: #e8f5e9;
+  background: #c8e6c9;
+  font-weight: 600;
+  box-shadow: inset 4px 0 0 #2e7d32;
 }

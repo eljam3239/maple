@@ -170,10 +170,10 @@ function App() {
 
   return (
     <div className="app">
-      <h1>🍁 Maple</h1>
+      <h1 className="app-title">🍁 Maple</h1>
 
       {solved && (
-        <p className="success">🎉 You got it in {guesses.length} guess{guesses.length > 1 ? 'es' : ''}!</p>
+        <p className="success compact-status">🎉 You got it in {guesses.length} guess{guesses.length > 1 ? 'es' : ''}!</p>
       )}
 
       {!solved && (
@@ -193,12 +193,13 @@ function App() {
 
       {error && <p className="error">{error}</p>}
 
+      <div className="game-body">
       <div className="map-container">
         <MapContainer
           center={[56, -96]}
           zoom={4}
           scrollWheelZoom={true}
-          style={{ height: '600px', width: '100%' }}
+          style={{ height: '100%', width: '100%' }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -244,13 +245,13 @@ function App() {
         </MapContainer>
       </div>
 
-      {guesses.length > 0 && (
+      <div className="guess-pane">
+      {guesses.length > 0 ? (
         <table>
           <thead>
             <tr>
               <th>#</th>
               <th>City</th>
-              <th>Correct</th>
               <th>Province</th>
               <th>Distance</th>
               <th>Direction</th>
@@ -262,7 +263,6 @@ function App() {
               <tr key={i} className={g.correct ? 'correct-row' : ''}>
                 <td>{i + 1}</td>
                 <td>{g.city}</td>
-                <td>{g.correct ? '✅' : '❌'}</td>
                 <td>{g.provinceMatch ? '✅' : '❌'}</td>
                 <td>{g.distanceKm} km</td>
                 <td>{g.direction}</td>
@@ -271,7 +271,11 @@ function App() {
             ))}
           </tbody>
         </table>
+      ) : (
+        <p className="guess-empty">Your guesses will appear here.</p>
       )}
+      </div>
+      </div>
     </div>
   )
 }
