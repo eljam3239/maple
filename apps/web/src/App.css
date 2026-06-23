@@ -115,12 +115,18 @@
 .map-container {
   flex: 1;
   min-width: 0;
+  position: relative;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #ddd;
+  background: #eaf2f8;
 }
 
 .map-legend {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 400;
   background: rgba(255, 255, 255, 0.9);
   padding: 8px 12px;
   border-radius: 6px;

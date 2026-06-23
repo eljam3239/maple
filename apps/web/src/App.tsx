@@ -1,7 +1,6 @@
-import { useState, useEffect, useMemo } from 'react'
-import { MapContainer, TileLayer, CircleMarker, Tooltip, GeoJSON, useMap } from 'react-leaflet'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
+import { geoConicConformal } from 'd3-geo'
 import './App.css'
 
 interface GuessResult {
@@ -17,21 +16,13 @@ interface GuessResult {
   longitude: number
 }
 
-function getProvinceStyle(dist: number | undefined) {
-  const fillColor =
-    dist === undefined ? '#888' :
-    dist === 0 ? '#800026' :
-    dist === 1 ? '#E31A1C' :
-    dist === 2 ? '#FED976' :
-    '#FFEDA0'
-  return {
-    fillColor,
-    fillOpacity: dist === undefined ? 0.15 : 0.75,
-    weight: 1,
-    color: '#555',
-    dashArray: '3',
-    opacity: 1,
-  }
+// Fill colour for a province given how many provinces away it is from the target.
+function provinceFill(dist: number | undefined): string {
+  if (dist === undefined) return '#dfe6e9' // not yet implicated — neutral land
+  if (dist === 0) return '#800026'
+  if (dist === 1) return '#E31A1C'
+  if (dist === 2) return '#FED976'
+  return '#FFEDA0'
 }
 
 const LEGEND_ITEMS = [
@@ -42,23 +33,34 @@ const LEGEND_ITEMS = [
 ]
 
 function MapLegend() {
-  const map = useMap()
+  return (
+    <div className="map-legend">
+      <strong>Province distance</strong>
+      {LEGEND_ITEMS.map(({ color, label }) => (
+        <div className="legend-row" key={label}>
+          <span className="legend-swatch" style={{ background: color }} />
+          {label}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Measure an element's content box; used to fit the projection to the viewport.
+function useElementSize() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState({ w: 0, h: 0 })
   useEffect(() => {
-    const legend = L.control({ position: 'bottomright' })
-    legend.onAdd = () => {
-      const div = L.DomUtil.create('div', 'map-legend')
-      div.innerHTML =
-        '<strong>Province distance</strong>' +
-        LEGEND_ITEMS.map(
-          ({ color, label }) =>
-            `<div class="legend-row"><span class="legend-swatch" style="background:${color}"></span>${label}</div>`
-        ).join('')
-      return div
-    }
-    legend.addTo(map)
-    return () => { legend.remove() }
-  }, [map])
-  return null
+    const el = ref.current
+    if (!el) return
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect
+      setSize({ w: Math.round(width), h: Math.round(height) })
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+  return [ref, size] as const
 }
 
 async function getOrCreatePlayerId(): Promise<string> {
@@ -79,10 +81,29 @@ function App() {
   const [solved, setSolved] = useState(false)
   const [loading, setLoading] = useState(true)
   const [provincesGeoJSON, setProvincesGeoJSON] = useState<object | null>(null)
+  const [mapRef, mapSize] = useElementSize()
 
   useEffect(() => {
     fetch('/canada-provinces.geojson').then(r => r.json()).then(setProvincesGeoJSON)
   }, [])
+
+  // Fall back to a sensible size until the ResizeObserver reports the real one,
+  // so the map renders immediately rather than waiting on measurement.
+  const mapW = mapSize.w || 800
+  const mapH = mapSize.h || 600
+
+  // Lambert conformal conic (the standard Canada projection), fit to the
+  // viewport so the country fills the available space with no world around it.
+  const projection = useMemo(() => {
+    if (!provincesGeoJSON) return null
+    return geoConicConformal()
+      .parallels([49, 77])
+      .rotate([96, 0])
+      .fitExtent(
+        [[12, 12], [mapW - 12, mapH - 12]],
+        provincesGeoJSON as never,
+      )
+  }, [provincesGeoJSON, mapW, mapH])
 
   // Best (lowest) provinceDistance seen per province name
   const provinceDistances = useMemo(() => {
@@ -194,55 +215,52 @@ function App() {
       {error && <p className="error">{error}</p>}
 
       <div className="game-body">
-      <div className="map-container">
-        <MapContainer
-          center={[56, -96]}
-          zoom={4}
-          scrollWheelZoom={true}
-          style={{ height: '100%', width: '100%' }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {/* Province choropleth — key forces remount on each guess so styles refresh */}
-          {provincesGeoJSON && (
-            <GeoJSON
-              key={guesses.length}
-              data={provincesGeoJSON as any}
-              onEachFeature={(feature, layer) => {
-                const name: string = feature?.properties?.name
-                ;(layer as L.Path).setStyle(getProvinceStyle(provinceDistances[name]))
-                layer.on({
-                  mouseover: (e) => {
-                    e.target.setStyle({ weight: 3, color: '#333', dashArray: '' })
-                    e.target.bringToFront()
-                  },
-                  mouseout: (e) => {
-                    e.target.setStyle(getProvinceStyle(provinceDistances[name]))
-                  },
+      <div className="map-container" ref={mapRef}>
+        {projection && (
+          <ComposableMap
+            projection={projection as never}
+            width={mapW}
+            height={mapH}
+            style={{ width: '100%', height: '100%' }}
+          >
+            <Geographies geography={provincesGeoJSON as never}>
+              {({ geographies }) =>
+                geographies.map((geo) => {
+                  const name: string = geo.properties.name
+                  const dist = provinceDistances[name]
+                  return (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      fill={provinceFill(dist)}
+                      stroke="#5c6b73"
+                      strokeWidth={0.5}
+                      style={{
+                        default: { outline: 'none' },
+                        hover: { fill: '#34495e', stroke: '#2c3e50', strokeWidth: 1, outline: 'none' },
+                        pressed: { outline: 'none' },
+                      }}
+                    >
+                      <title>{name}</title>
+                    </Geography>
+                  )
                 })
-              }}
-            />
-          )}
-          <MapLegend />
-          {guesses.map((g, i) => {
-            return (
-              <CircleMarker
-                key={i}
-                center={[g.latitude, g.longitude]}
-                radius={4}
-                pathOptions={{
-                    color: '#000',
-                    fillColor: '#000',
-                    fillOpacity: 0.8,
-                  }}
-              >
-                <Tooltip>{g.city}</Tooltip>
-              </CircleMarker>
-            )
-          })}
-        </MapContainer>
+              }
+            </Geographies>
+            {guesses.map((g, i) => (
+              <Marker key={i} coordinates={[g.longitude, g.latitude]}>
+                <circle
+                  r={g.correct ? 6 : 4}
+                  fill={g.correct ? '#f1c40f' : '#111'}
+                  stroke="#fff"
+                  strokeWidth={1.5}
+                />
+                <title>{g.city}</title>
+              </Marker>
+            ))}
+          </ComposableMap>
+        )}
+        <MapLegend />
       </div>
 
       <div className="guess-pane">
