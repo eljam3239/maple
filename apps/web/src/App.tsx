@@ -16,6 +16,10 @@ interface GuessResult {
   longitude: number
 }
 
+interface GeoFeature {
+  properties: { name: string }
+}
+
 // Fill colour for a province given how many provinces away it is from the target.
 function provinceFill(dist: number | undefined): string {
   if (dist === undefined) return '#dfe6e9' // not yet implicated — neutral land
@@ -81,6 +85,7 @@ function App() {
   const [solved, setSolved] = useState(false)
   const [loading, setLoading] = useState(true)
   const [provincesGeoJSON, setProvincesGeoJSON] = useState<object | null>(null)
+  const [focusedProvince, setFocusedProvince] = useState<string | null>(null)
   const [mapRef, mapSize] = useElementSize()
 
   useEffect(() => {
@@ -93,17 +98,25 @@ function App() {
   const mapH = mapSize.h || 600
 
   // Lambert conformal conic (the standard Canada projection), fit to the
-  // viewport so the country fills the available space with no world around it.
+  // viewport. When a province is focused we fit to that province alone, so its
+  // guess pins spread out to fill the pane; otherwise we fit to all of Canada.
   const projection = useMemo(() => {
     if (!provincesGeoJSON) return null
+    const features = (provincesGeoJSON as { features: GeoFeature[] }).features
+    const focused = focusedProvince
+      ? features.find((f) => f.properties.name === focusedProvince)
+      : null
+    const fitTarget = focused ?? provincesGeoJSON
+    // Tighter padding when drilled in so the province uses the full pane.
+    const pad = focused ? 24 : 12
     return geoConicConformal()
       .parallels([49, 77])
       .rotate([96, 0])
       .fitExtent(
-        [[12, 12], [mapW - 12, mapH - 12]],
-        provincesGeoJSON as never,
+        [[pad, pad], [mapW - pad, mapH - pad]],
+        fitTarget as never,
       )
-  }, [provincesGeoJSON, mapW, mapH])
+  }, [provincesGeoJSON, focusedProvince, mapW, mapH])
 
   // Best (lowest) provinceDistance seen per province name
   const provinceDistances = useMemo(() => {
@@ -232,16 +245,19 @@ function App() {
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
+                      onDoubleClick={() =>
+                        setFocusedProvince((cur) => (cur === name ? null : name))
+                      }
                       fill={provinceFill(dist)}
                       stroke="#5c6b73"
                       strokeWidth={0.5}
                       style={{
-                        default: { outline: 'none' },
-                        hover: { fill: '#34495e', stroke: '#2c3e50', strokeWidth: 1, outline: 'none' },
+                        default: { outline: 'none', cursor: 'pointer' },
+                        hover: { fill: '#34495e', stroke: '#2c3e50', strokeWidth: 1, outline: 'none', cursor: 'pointer' },
                         pressed: { outline: 'none' },
                       }}
                     >
-                      <title>{name}</title>
+                      <title>{focusedProvince === name ? `${name} — double-click to zoom out` : `${name} — double-click to zoom in`}</title>
                     </Geography>
                   )
                 })
@@ -259,6 +275,15 @@ function App() {
               </Marker>
             ))}
           </ComposableMap>
+        )}
+        {focusedProvince && (
+          <button
+            type="button"
+            className="map-back"
+            onClick={() => setFocusedProvince(null)}
+          >
+            ← Canada
+          </button>
         )}
         <MapLegend />
       </div>
