@@ -53,11 +53,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
       .map(m => m.city)
   }, [cities, query])
 
-  // Keep the highlighted row in range and scrolled into view.
-  useEffect(() => {
-    setHighlight(0)
-  }, [query])
-
+  // Keep the highlighted row scrolled into view as it moves.
   useEffect(() => {
     const el = listRef.current?.children[highlight] as HTMLElement | undefined
     el?.scrollIntoView({ block: 'nearest' })
@@ -115,6 +111,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
           onChange={e => {
             setQuery(e.target.value)
             setOpen(true)
+            setHighlight(0)
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}

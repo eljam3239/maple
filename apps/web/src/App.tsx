@@ -1,8 +1,12 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
-import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
+import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup, useZoomPanContext } from 'react-simple-maps'
 import { geoConicConformal } from 'd3-geo'
 import { CityAutocomplete, type CityOption } from './CityAutocomplete'
 import './App.css'
+
+// How far double-click / wheel zoom can go. High enough that a cluster of
+// guesses only 15-30 km apart spreads out into distinct, clickable pins.
+const MAX_ZOOM = 40
 
 interface GuessResult {
   city: string
@@ -15,10 +19,6 @@ interface GuessResult {
   populationHint: 'larger' | 'smaller' | 'equal'
   latitude: number
   longitude: number
-}
-
-interface GeoFeature {
-  properties: { name: string }
 }
 
 // Fill colour for a province given how many provinces away it is from the target.
@@ -48,6 +48,61 @@ function MapLegend() {
         </div>
       ))}
     </div>
+  )
+}
+
+// Provinces + guess pins, rendered inside <ZoomableGroup>. The group applies an
+// SVG transform that scales everything by the current zoom `k`, so we divide all
+// stroke widths and pin radii by `k` to keep them a constant size on screen —
+// that's what lets a tight cluster of guesses stay readable as you zoom in.
+function MapContent({
+  provincesGeoJSON,
+  provinceDistances,
+  guesses,
+}: {
+  provincesGeoJSON: object
+  provinceDistances: Record<string, number>
+  guesses: GuessResult[]
+}) {
+  const { k } = useZoomPanContext()
+  return (
+    <>
+      <Geographies geography={provincesGeoJSON as never}>
+        {({ geographies }) =>
+          geographies.map((geo) => {
+            const name: string = geo.properties.name
+            const dist = provinceDistances[name]
+            return (
+              <Geography
+                key={geo.rsmKey}
+                geography={geo}
+                fill={provinceFill(dist)}
+                stroke="#5c6b73"
+                strokeWidth={0.5 / k}
+                style={{
+                  default: { outline: 'none' },
+                  hover: { fill: '#34495e', stroke: '#2c3e50', strokeWidth: 1 / k, outline: 'none' },
+                  pressed: { outline: 'none' },
+                }}
+              >
+                <title>{name}</title>
+              </Geography>
+            )
+          })
+        }
+      </Geographies>
+      {guesses.map((g, i) => (
+        <Marker key={i} coordinates={[g.longitude, g.latitude]}>
+          <circle
+            r={(g.correct ? 6 : 4) / k}
+            fill={g.correct ? '#f1c40f' : '#111'}
+            stroke="#fff"
+            strokeWidth={1.5 / k}
+          />
+          <title>{g.city}</title>
+        </Marker>
+      ))}
+    </>
   )
 }
 
@@ -86,7 +141,11 @@ function App() {
   const [solved, setSolved] = useState(false)
   const [loading, setLoading] = useState(true)
   const [provincesGeoJSON, setProvincesGeoJSON] = useState<object | null>(null)
-  const [focusedProvince, setFocusedProvince] = useState<string | null>(null)
+  // Map viewport, driven by double-click / wheel / drag. `center` is the geo
+  // coordinate at the middle of the pane; null until the projection is ready.
+  const [zoom, setZoom] = useState(1)
+  const [center, setCenter] = useState<[number, number] | null>(null)
+  const homeCenter = useRef<[number, number] | null>(null)
   const [mapRef, mapSize] = useElementSize()
 
   useEffect(() => {
@@ -115,26 +174,39 @@ function App() {
   const mapW = mapSize.w || 800
   const mapH = mapSize.h || 600
 
-  // Lambert conformal conic (the standard Canada projection), fit to the
-  // viewport. When a province is focused we fit to that province alone, so its
-  // guess pins spread out to fill the pane; otherwise we fit to all of Canada.
+  // Lambert conformal conic (the standard Canada projection), fit to the whole
+  // country. Zooming into a region is handled on top of this by <ZoomableGroup>
+  // (SVG transform), not by re-fitting the projection.
   const projection = useMemo(() => {
     if (!provincesGeoJSON) return null
-    const features = (provincesGeoJSON as { features: GeoFeature[] }).features
-    const focused = focusedProvince
-      ? features.find((f) => f.properties.name === focusedProvince)
-      : null
-    const fitTarget = focused ?? provincesGeoJSON
-    // Tighter padding when drilled in so the province uses the full pane.
-    const pad = focused ? 24 : 12
+    const pad = 12
     return geoConicConformal()
       .parallels([49, 77])
       .rotate([96, 0])
       .fitExtent(
         [[pad, pad], [mapW - pad, mapH - pad]],
-        fitTarget as never,
+        provincesGeoJSON as never,
       )
-  }, [provincesGeoJSON, focusedProvince, mapW, mapH])
+  }, [provincesGeoJSON, mapW, mapH])
+
+  // Once the projection exists, seed the viewport centre from the pane's middle
+  // pixel so that zoom=1 is the untransformed all-Canada view (no initial jump).
+  // invert(middle) is essentially size-independent, so this stays valid across
+  // resizes without recomputing.
+  useEffect(() => {
+    if (projection && !center) {
+      const home = projection.invert?.([mapW / 2, mapH / 2]) as [number, number] | undefined
+      if (home) {
+        homeCenter.current = home
+        setCenter(home)
+      }
+    }
+  }, [projection, center, mapW, mapH])
+
+  function resetView() {
+    setZoom(1)
+    if (homeCenter.current) setCenter(homeCenter.current)
+  }
 
   // Best (lowest) provinceDistance seen per province name
   const provinceDistances = useMemo(() => {
@@ -240,62 +312,40 @@ function App() {
 
       <div className="game-body">
       <div className="map-container" ref={mapRef}>
-        {projection && (
+        {projection && center && (
           <ComposableMap
             projection={projection as never}
             width={mapW}
             height={mapH}
             style={{ width: '100%', height: '100%' }}
           >
-            <Geographies geography={provincesGeoJSON as never}>
-              {({ geographies }) =>
-                geographies.map((geo) => {
-                  const name: string = geo.properties.name
-                  const dist = provinceDistances[name]
-                  return (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      onDoubleClick={() =>
-                        setFocusedProvince((cur) => (cur === name ? null : name))
-                      }
-                      fill={provinceFill(dist)}
-                      stroke="#5c6b73"
-                      strokeWidth={0.5}
-                      style={{
-                        default: { outline: 'none', cursor: 'pointer' },
-                        hover: { fill: '#34495e', stroke: '#2c3e50', strokeWidth: 1, outline: 'none', cursor: 'pointer' },
-                        pressed: { outline: 'none' },
-                      }}
-                    >
-                      <title>{focusedProvince === name ? `${name} — double-click to zoom out` : `${name} — double-click to zoom in`}</title>
-                    </Geography>
-                  )
-                })
-              }
-            </Geographies>
-            {guesses.map((g, i) => (
-              <Marker key={i} coordinates={[g.longitude, g.latitude]}>
-                <circle
-                  r={g.correct ? 6 : 4}
-                  fill={g.correct ? '#f1c40f' : '#111'}
-                  stroke="#fff"
-                  strokeWidth={1.5}
-                />
-                <title>{g.city}</title>
-              </Marker>
-            ))}
+            <ZoomableGroup
+              zoom={zoom}
+              center={center}
+              minZoom={1}
+              maxZoom={MAX_ZOOM}
+              // Double-click / wheel / drag are handled internally; mirror the
+              // resulting viewport back into state so it survives re-renders and
+              // the reset button knows where we are.
+              onMoveEnd={(pos) => {
+                setZoom(pos.zoom)
+                setCenter(pos.coordinates)
+              }}
+            >
+              <MapContent
+                provincesGeoJSON={provincesGeoJSON as object}
+                provinceDistances={provinceDistances}
+                guesses={guesses}
+              />
+            </ZoomableGroup>
           </ComposableMap>
         )}
-        {focusedProvince && (
-          <button
-            type="button"
-            className="map-back"
-            onClick={() => setFocusedProvince(null)}
-          >
+        {zoom > 1.01 && (
+          <button type="button" className="map-back" onClick={resetView}>
             ← Canada
           </button>
         )}
+        <p className="map-hint">Double-click or scroll to zoom · drag to pan</p>
         <MapLegend />
       </div>
 
