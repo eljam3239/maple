@@ -8,10 +8,13 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // Full rebuild: canonical names changed (e.g. "Montreal" -> "Montréal"), so a
-  // plain upsert would leave stale rows behind. Clear dependent rows first to
-  // satisfy foreign keys — this wipes guess/puzzle history, which is fine while
-  // we're reshaping the city data. Run `prisma migrate reset` for a full reset.
+  // plain upsert would leave stale rows behind. Cities are recreated with fresh
+  // auto-increment ids, so we must also clear every row that references a city
+  // id — including GameSession.targetCityId, or existing sessions would point at
+  // deleted cities ("Target city not found"). FK-safe order; wipes play history,
+  // which is fine while we're reshaping the city data.
   await prisma.guess.deleteMany();
+  await prisma.gameSession.deleteMany();
   await prisma.dailyPuzzle.deleteMany();
   await prisma.city.deleteMany();
 

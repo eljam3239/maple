@@ -135,7 +135,8 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           placeholder="Guess a Canadian city..."
-          disabled={disabled}
+          // Intentionally not disabled while a guess is in flight: disabling
+          // blurs the input and drops the first keystroke of the next guess.
           role="combobox"
           aria-expanded={showList}
           aria-controls="city-autocomplete-list"
