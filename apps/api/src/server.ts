@@ -3,6 +3,7 @@ import Fastify from "fastify";
 import { getOrCreateDailyPuzzle } from "./services/puzzle";
 import { evaluateGuess } from "./services/guess";
 import { createPlayer, getOrCreateSession } from "./services/session";
+import { listCities } from "./services/cities";
 
 
 const app = Fastify();
@@ -23,6 +24,15 @@ app.get("/puzzle/today", async (req, res) => {
     // DO NOT send city name to client
     puzzleId: puzzle.cityId,
   });
+});
+
+app.get("/cities", async (req, res) => {
+  try {
+    const cities = await listCities();
+    res.send(cities);
+  } catch (err: any) {
+    res.status(500).send({ error: err.message });
+  }
 });
 
 app.post("/player", async (req, res) => {

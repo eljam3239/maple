@@ -89,6 +89,69 @@
   cursor: not-allowed;
 }
 
+.city-autocomplete {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto 0.75rem;
+}
+
+.city-autocomplete .guess-form {
+  margin: 0;
+  max-width: none;
+}
+
+.autocomplete-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 600;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-height: 300px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.autocomplete-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.autocomplete-list li.active {
+  background: #e8f0fe;
+}
+
+.autocomplete-list li.guessed {
+  opacity: 0.55;
+}
+
+.autocomplete-list .ac-city {
+  font-weight: 600;
+}
+
+.autocomplete-list .ac-province {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.autocomplete-list .ac-guessed-tag {
+  margin-left: auto;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #999;
+}
+
 .error {
   color: #d32f2f;
   margin: 0.25rem 0 0.5rem;

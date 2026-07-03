@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
 import { geoConicConformal } from 'd3-geo'
+import { CityAutocomplete, type CityOption } from './CityAutocomplete'
 import './App.css'
 
 interface GuessResult {
@@ -79,7 +80,7 @@ async function getOrCreatePlayerId(): Promise<string> {
 
 function App() {
   const [sessionId, setSessionId] = useState<string | null>(null)
-  const [guess, setGuess] = useState('')
+  const [cities, setCities] = useState<CityOption[]>([])
   const [guesses, setGuesses] = useState<GuessResult[]>([])
   const [error, setError] = useState<string | null>(null)
   const [solved, setSolved] = useState(false)
@@ -91,6 +92,23 @@ function App() {
   useEffect(() => {
     fetch('/canada-provinces.geojson').then(r => r.json()).then(setProvincesGeoJSON)
   }, [])
+
+  // Full list of guessable cities, for the autocomplete dropdown.
+  useEffect(() => {
+    fetch('/api/cities')
+      .then(r => r.json())
+      .then((data: CityOption[]) => setCities(data))
+      .catch(() => setCities([]))
+  }, [])
+
+  // Normalized names already guessed, so the dropdown can flag repeats.
+  const guessedNames = useMemo(() => {
+    return new Set(
+      guesses.map(g =>
+        g.city.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim(),
+      ),
+    )
+  }, [guesses])
 
   // Fall back to a sensible size until the ResizeObserver reports the real one,
   // so the map renders immediately rather than waiting on measurement.
@@ -160,9 +178,9 @@ function App() {
     init()
   }, [])
 
-  async function handleGuess(e: React.FormEvent) {
-    e.preventDefault()
-    if (!guess.trim() || !sessionId || solved) return
+  async function submitGuess(cityName: string) {
+    const city = cityName.trim()
+    if (!city || !sessionId || solved) return
 
     setLoading(true)
     setError(null)
@@ -171,7 +189,7 @@ function App() {
       const res = await fetch('/api/guess', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, city: guess.trim() }),
+        body: JSON.stringify({ sessionId, city }),
       })
 
       if (!res.ok) {
@@ -181,9 +199,8 @@ function App() {
       }
 
       const result = await res.json()
-      const entry: GuessResult = { city: guess.trim(), ...result }
+      const entry: GuessResult = { city, ...result }
       setGuesses(prev => [...prev, entry])
-      setGuess('')
 
       if (result.correct) setSolved(true)
     } catch {
@@ -211,18 +228,12 @@ function App() {
       )}
 
       {!solved && (
-        <form onSubmit={handleGuess} className="guess-form">
-          <input
-            type="text"
-            value={guess}
-            onChange={e => setGuess(e.target.value)}
-            placeholder="Guess a Canadian city..."
-            disabled={loading}
-          />
-          <button type="submit" disabled={loading || !guess.trim()}>
-            {loading ? '...' : 'Guess'}
-          </button>
-        </form>
+        <CityAutocomplete
+          cities={cities}
+          guessedNames={guessedNames}
+          disabled={loading}
+          onSubmit={submitGuess}
+        />
       )}
 
       {error && <p className="error">{error}</p>}
