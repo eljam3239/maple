@@ -57,9 +57,9 @@
     "latitude": 43.7668,
     "longitude": -79.4163,
     "population": 869401,
-    "aliases": [],
     "guessable": true,
-    "answerable": false
+    "answerable": false,
+    "aliases": []
   },
   {
     "name": "Winnipeg",
@@ -107,9 +107,9 @@
     "latitude": 43.7722,
     "longitude": -79.2566,
     "population": 632098,
-    "aliases": [],
     "guessable": true,
-    "answerable": false
+    "answerable": false,
+    "aliases": []
   },
   {
     "name": "Hamilton",
@@ -330,7 +330,7 @@
     "longitude": -75.7225,
     "population": 180000,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -360,7 +360,7 @@
     "longitude": -122.85,
     "population": 159390,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -370,7 +370,7 @@
     "longitude": -75.63333,
     "population": 150012,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -379,9 +379,9 @@
     "latitude": 43.6896,
     "longitude": -79.4795,
     "population": 150000,
-    "aliases": [],
     "guessable": true,
-    "answerable": false
+    "answerable": false,
+    "aliases": []
   },
   {
     "name": "Saguenay",
@@ -420,7 +420,7 @@
     "longitude": -73.60686,
     "population": 146501,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Rosemont-La Petite-Patrie"
     ]
@@ -432,7 +432,7 @@
     "longitude": -73.60535,
     "population": 144814,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Villeray-Saint-Michel-Parc-Extension"
     ]
@@ -488,7 +488,7 @@
     "longitude": -73.54626,
     "population": 142753,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Mercier-Hochelaga-Maisonneuve"
     ]
@@ -530,7 +530,7 @@
     "longitude": -73.66667,
     "population": 135336,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -540,7 +540,7 @@
     "longitude": -73.50773,
     "population": 135218,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -600,7 +600,7 @@
     "longitude": -75.50433,
     "population": 125937,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Orleans"
     ]
@@ -612,7 +612,7 @@
     "longitude": -75.68725,
     "population": 125090,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -622,7 +622,7 @@
     "longitude": -73.78669,
     "population": 119944,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -641,9 +641,9 @@
     "latitude": 43.6905,
     "longitude": -79.3279,
     "population": 118071,
-    "aliases": [],
     "guessable": true,
-    "answerable": false
+    "answerable": false,
+    "aliases": []
   },
   {
     "name": "Saanich",
@@ -662,7 +662,7 @@
     "longitude": -73.58463,
     "population": 113868,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Riviere-des-Prairies-Pointe-aux-Trembles"
     ]
@@ -684,7 +684,7 @@
     "longitude": -71.29217,
     "population": 111300,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -714,7 +714,7 @@
     "longitude": -71.22641,
     "population": 108415,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "La Cite-Limoilou"
     ]
@@ -736,7 +736,7 @@
     "longitude": -73.58081,
     "population": 105813,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -756,7 +756,7 @@
     "longitude": -73.57046,
     "population": 104944,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -796,7 +796,7 @@
     "longitude": -122.86667,
     "population": 102555,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -856,7 +856,7 @@
     "longitude": -73.66585,
     "population": 98828,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -876,7 +876,7 @@
     "longitude": -73.75,
     "population": 94030,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -926,7 +926,7 @@
     "longitude": -75.91606,
     "population": 90000,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -936,7 +936,7 @@
     "longitude": -71.37222,
     "population": 88460,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -956,7 +956,7 @@
     "longitude": -73.63063,
     "population": 86857,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Montreal-Nord"
     ]
@@ -968,7 +968,7 @@
     "longitude": -73.58986,
     "population": 86347,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1008,7 +1008,7 @@
     "longitude": -71.305,
     "population": 82870,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1018,7 +1018,7 @@
     "longitude": -73.41583,
     "population": 82548,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1038,7 +1038,7 @@
     "longitude": -71.19201,
     "population": 81425,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1048,7 +1048,7 @@
     "longitude": -123.06186,
     "population": 80740,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1058,7 +1058,7 @@
     "longitude": -73.59501,
     "population": 79495,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Saint-Leonard"
     ]
@@ -1070,7 +1070,7 @@
     "longitude": -79.39909,
     "population": 79440,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1100,7 +1100,7 @@
     "longitude": -122.79167,
     "population": 77170,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1110,7 +1110,7 @@
     "longitude": -71.272,
     "population": 77000,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Les Rivieres"
     ]
@@ -1132,7 +1132,7 @@
     "longitude": -79.76633,
     "population": 76382,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1142,7 +1142,7 @@
     "longitude": -122.7276,
     "population": 73355,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1152,7 +1152,7 @@
     "longitude": -73.8417,
     "population": 73194,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1162,7 +1162,7 @@
     "longitude": -106.63709,
     "population": 72564,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1222,7 +1222,7 @@
     "longitude": -106.70356,
     "population": 70192,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1242,7 +1242,7 @@
     "longitude": -73.57058,
     "population": 69229,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1252,7 +1252,7 @@
     "longitude": -71.06369,
     "population": 69004,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1262,7 +1262,7 @@
     "longitude": -73.61432,
     "population": 68152,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Notre-Dame-de-Grace"
     ]
@@ -1294,7 +1294,7 @@
     "longitude": -79.3772,
     "population": 65913,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1304,7 +1304,7 @@
     "longitude": -122.8,
     "population": 65565,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1314,7 +1314,7 @@
     "longitude": -122.8,
     "population": 64985,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1324,7 +1324,7 @@
     "longitude": -75.71056,
     "population": 63702,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1364,7 +1364,7 @@
     "longitude": -123.13333,
     "population": 62855,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1374,7 +1374,7 @@
     "longitude": -123.11935,
     "population": 62030,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1394,7 +1394,7 @@
     "longitude": -122.91667,
     "population": 60769,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1414,7 +1414,7 @@
     "longitude": -73.89284,
     "population": 59093,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1444,7 +1444,7 @@
     "longitude": -75.80644,
     "population": 56542,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1454,7 +1454,7 @@
     "longitude": -73.62168,
     "population": 56420,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1486,7 +1486,7 @@
     "longitude": -71.24884,
     "population": 54842,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": [
       "Jonquiere"
     ]
@@ -1498,7 +1498,7 @@
     "longitude": -79.22773,
     "population": 53485,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1508,7 +1508,7 @@
     "longitude": -123,
     "population": 52355,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1528,7 +1528,7 @@
     "longitude": -106.57867,
     "population": 51957,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -1568,7 +1568,7 @@
     "longitude": -77.38277,
     "population": 50716,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1588,7 +1588,7 @@
     "longitude": -79.46633,
     "population": 50396,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1598,7 +1598,7 @@
     "longitude": -72.95699,
     "population": 50326,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1608,7 +1608,7 @@
     "longitude": -79.3163,
     "population": 49864,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1628,7 +1628,7 @@
     "longitude": -73.82419,
     "population": 48930,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1648,7 +1648,7 @@
     "longitude": -74.72815,
     "population": 48821,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1668,7 +1668,7 @@
     "longitude": -123.50261,
     "population": 46584,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1688,7 +1688,7 @@
     "longitude": -73.88249,
     "population": 46493,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1708,7 +1708,7 @@
     "longitude": -123.16019,
     "population": 45487,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1758,7 +1758,7 @@
     "longitude": -77.56618,
     "population": 43577,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1768,7 +1768,7 @@
     "longitude": -82.18494,
     "population": 43550,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1778,7 +1778,7 @@
     "longitude": -79.64964,
     "population": 43326,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1798,7 +1798,7 @@
     "longitude": -74.13253,
     "population": 42787,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1808,7 +1808,7 @@
     "longitude": -73.74919,
     "population": 42786,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": [
       "Chateauguay"
     ]
@@ -1820,7 +1820,7 @@
     "longitude": -68.52396,
     "population": 42240,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1830,7 +1830,7 @@
     "longitude": -73.90554,
     "population": 42062,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1840,7 +1840,7 @@
     "longitude": -81.33312,
     "population": 41788,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1850,7 +1850,7 @@
     "longitude": -73.11358,
     "population": 41629,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1860,7 +1860,7 @@
     "longitude": -122.30258,
     "population": 41519,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1910,7 +1910,7 @@
     "longitude": -80.7497,
     "population": 40404,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1920,7 +1920,7 @@
     "longitude": -119.27337,
     "population": 40116,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1940,7 +1940,7 @@
     "longitude": -73.43605,
     "population": 39062,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1950,7 +1950,7 @@
     "longitude": -113.91874,
     "population": 38985,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1960,7 +1960,7 @@
     "longitude": -81.18038,
     "population": 38909,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -1990,7 +1990,7 @@
     "longitude": -72.74913,
     "population": 38211,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2072,7 +2072,7 @@
     "longitude": -82.59981,
     "population": 35730,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2092,7 +2092,7 @@
     "longitude": -105.76772,
     "population": 35102,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2132,7 +2132,7 @@
     "longitude": -73.4236,
     "population": 34772,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2152,7 +2152,7 @@
     "longitude": -73.59956,
     "population": 34626,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2162,7 +2162,7 @@
     "longitude": -74.08251,
     "population": 34626,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2192,7 +2192,7 @@
     "longitude": -71.96579,
     "population": 34426,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2202,7 +2202,7 @@
     "longitude": -80.34967,
     "population": 34415,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2222,7 +2222,7 @@
     "longitude": -105.53445,
     "population": 33890,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2242,7 +2242,7 @@
     "longitude": -119.58584,
     "population": 33761,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2282,7 +2282,7 @@
     "longitude": -125.24459,
     "population": 33430,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2332,7 +2332,7 @@
     "longitude": -83.06095,
     "population": 32721,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2342,7 +2342,7 @@
     "longitude": -113.81867,
     "population": 32255,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2352,7 +2352,7 @@
     "longitude": -114.46871,
     "population": 32199,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2372,7 +2372,7 @@
     "longitude": -110.02256,
     "population": 31582,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2382,7 +2382,7 @@
     "longitude": -80.94972,
     "population": 31465,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2402,7 +2402,7 @@
     "longitude": -73.66585,
     "population": 31395,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": [
       "Cote-Saint-Luc"
     ]
@@ -2444,7 +2444,7 @@
     "longitude": -70.66526,
     "population": 31173,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2454,7 +2454,7 @@
     "longitude": -79.42068,
     "population": 31166,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2474,7 +2474,7 @@
     "longitude": -80.09967,
     "population": 30734,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2484,7 +2484,7 @@
     "longitude": -78.93286,
     "population": 30710,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2526,7 +2526,7 @@
     "longitude": -113.98281,
     "population": 30214,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2536,7 +2536,7 @@
     "longitude": -73.81669,
     "population": 30161,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2566,7 +2566,7 @@
     "longitude": -123.68596,
     "population": 29676,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2586,7 +2586,7 @@
     "longitude": -71.6491,
     "population": 29526,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2626,7 +2626,7 @@
     "longitude": -73.33246,
     "population": 29019,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2636,7 +2636,7 @@
     "longitude": -119.58333,
     "population": 28793,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2646,7 +2646,7 @@
     "longitude": -66.38208,
     "population": 28534,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": [
       "Sept-Iles"
     ]
@@ -2658,7 +2658,7 @@
     "longitude": -124.9936,
     "population": 28420,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2678,7 +2678,7 @@
     "longitude": -66.64117,
     "population": 28167,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -2738,7 +2738,7 @@
     "longitude": -122.82457,
     "population": 27512,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -2938,7 +2938,7 @@
     "longitude": -63.57762,
     "population": 25555,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -3550,7 +3550,7 @@
     "longitude": -63.66732,
     "population": 21474,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -3760,7 +3760,7 @@
     "longitude": -64.81597,
     "population": 20584,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -3972,7 +3972,7 @@
     "longitude": -108.2967,
     "population": 19440,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -7106,7 +7106,7 @@
     "longitude": -117.28553,
     "population": 10664,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
@@ -9796,7 +9796,7 @@
     "longitude": -63.12839,
     "population": 7404,
     "guessable": true,
-    "answerable": true,
+    "answerable": false,
     "aliases": []
   },
   {
@@ -10698,7 +10698,7 @@
     "longitude": -63.21809,
     "population": 6574,
     "guessable": true,
-    "answerable": false,
+    "answerable": true,
     "aliases": []
   },
   {
