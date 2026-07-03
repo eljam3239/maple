@@ -6,7 +6,10 @@ import { computeProvinceDistance } from "../utils/provinces";
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
-export async function evaluateGuess(sessionId: string, cityName: string) {
+export async function evaluateGuess(
+  sessionId: string,
+  guess: { cityId?: number; cityName?: string }
+) {
   // 1. Look up the session
   const session = await prisma.gameSession.findUnique({
     where: { id: sessionId },
@@ -20,15 +23,16 @@ export async function evaluateGuess(sessionId: string, cityName: string) {
     throw new Error("Session already completed");
   }
 
-  // 2. Look up the guessed city
-  const guessedCity = await prisma.city.findFirst({
-    where: {
-      name: {
-        equals: cityName,
-        mode: "insensitive",
-      },
-    },
-  });
+  // 2. Look up the guessed city. The client normally sends an id (picked from
+  // the autocomplete), which is unambiguous even when two provinces share a
+  // name. A bare name is still accepted as a fallback for free-typed guesses.
+  const guessedCity = guess.cityId
+    ? await prisma.city.findFirst({ where: { id: guess.cityId, guessable: true } })
+    : guess.cityName
+    ? await prisma.city.findFirst({
+        where: { guessable: true, name: { equals: guess.cityName, mode: "insensitive" } },
+      })
+    : null;
 
   if (!guessedCity) {
     throw new Error("City not found");
@@ -85,6 +89,7 @@ export async function evaluateGuess(sessionId: string, cityName: string) {
 
   return {
     correct,
+    city: guessedCity.name,
     distanceKm: distance,
     direction,
     provinceMatch: guessedCity.province === targetCity.province,

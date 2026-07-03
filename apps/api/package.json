@@ -8,6 +8,7 @@
     "migrate": "prisma migrate dev --name init",
     "studio": "prisma studio",
     "generate": "prisma generate",
+    "build-cities": "tsx prisma/build-cities.ts",
     "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],

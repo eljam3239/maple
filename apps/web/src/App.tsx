@@ -281,9 +281,8 @@ function App() {
     init()
   }, [])
 
-  async function submitGuess(cityName: string) {
-    const city = cityName.trim()
-    if (!city || !sessionId || solved) return
+  async function submitGuess(guess: { cityId?: number; cityName: string }) {
+    if (!guess.cityName.trim() || !sessionId || solved) return
 
     setLoading(true)
     setError(null)
@@ -292,7 +291,7 @@ function App() {
       const res = await fetch('/api/guess', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, city }),
+        body: JSON.stringify({ sessionId, cityId: guess.cityId, city: guess.cityName.trim() }),
       })
 
       if (!res.ok) {
@@ -301,11 +300,12 @@ function App() {
         return
       }
 
-      const result = await res.json()
-      const entry: GuessResult = { city, ...result }
+      // The response carries the canonical city name, so the guess list shows
+      // the real spelling (e.g. "Montréal") rather than whatever was typed.
+      const entry: GuessResult = await res.json()
       setGuesses(prev => [...prev, entry])
 
-      if (result.correct) setSolved(true)
+      if (entry.correct) setSolved(true)
     } catch {
       setError('Network error')
     } finally {

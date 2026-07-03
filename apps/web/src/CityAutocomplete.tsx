@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 export interface CityOption {
+  id: number
   name: string
   province: string
+  aliases: string[]
 }
 
 interface Props {
   cities: CityOption[]
   guessedNames: Set<string>
   disabled?: boolean
-  onSubmit: (cityName: string) => void
+  onSubmit: (guess: { cityId?: number; cityName: string }) => void
 }
 
 const MAX_RESULTS = 8
@@ -36,6 +38,17 @@ function rank(query: string, name: string): number {
   return -1
 }
 
+// Best rank across the city's name and its aliases (e.g. "Montreal" matches
+// "Montréal"), so a variant spelling still surfaces the canonical city.
+function rankCity(query: string, city: CityOption): number {
+  let best = -1
+  for (const candidate of [city.name, ...city.aliases]) {
+    const score = rank(query, candidate)
+    if (score >= 0 && (best === -1 || score < best)) best = score
+  }
+  return best
+}
+
 export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: Props) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
@@ -46,7 +59,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
   const matches = useMemo(() => {
     if (!query.trim()) return []
     return cities
-      .map(city => ({ city, score: rank(query, city.name) }))
+      .map(city => ({ city, score: rankCity(query, city) }))
       .filter(m => m.score >= 0)
       .sort((a, b) => a.score - b.score) // stable: preserves population order within a tier
       .slice(0, MAX_RESULTS)
@@ -70,19 +83,25 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
 
   const showList = open && matches.length > 0
 
-  function choose(cityName: string) {
-    onSubmit(cityName)
+  function reset() {
     setQuery('')
     setOpen(false)
     setHighlight(0)
   }
 
+  function chooseCity(city: CityOption) {
+    // Submit by id — unambiguous even when two provinces share a city name.
+    onSubmit({ cityId: city.id, cityName: city.name })
+    reset()
+  }
+
   function submitQuery() {
     if (showList) {
-      choose(matches[highlight].name)
+      chooseCity(matches[highlight])
     } else if (query.trim()) {
       // No suggestion open — submit the raw text so exact typing still works.
-      choose(query.trim())
+      onSubmit({ cityName: query.trim() })
+      reset()
     }
   }
 
@@ -143,7 +162,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
                 // onMouseDown (not onClick) so it fires before the input blur.
                 onMouseDown={e => {
                   e.preventDefault()
-                  choose(city.name)
+                  chooseCity(city)
                 }}
                 onMouseEnter={() => setHighlight(i)}
               >

@@ -20,7 +20,11 @@ model City {
   latitude	Float
   longitude	Float
   population	Int
-  enabled	Boolean @default(true)
+  // guessable: shows in autocomplete and can be guessed (the large pool).
+  // answerable: eligible to be chosen as the daily target (the curated subset).
+  guessable	Boolean  @default(true)
+  answerable	Boolean  @default(false)
+  aliases	String[]
   @@unique([name, province])
   puzzle 	DailyPuzzle[]
   guesses	Guess[]

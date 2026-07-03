@@ -19,9 +19,9 @@ export async function getOrCreateDailyPuzzle() {
 
   if (puzzle) return puzzle;
 
-  // select random enabled city
+  // select a random answerable city (the curated daily-target pool)
   const cities = await prisma.city.findMany({
-    where: { enabled: true },
+    where: { answerable: true },
   });
 
   if (cities.length === 0) {

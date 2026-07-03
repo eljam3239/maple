@@ -1,5 +1,6 @@
 export interface GuessResponse {
   correct: boolean;
+  city: string;
   distanceKm: number;
   direction: string;
   provinceMatch: boolean;

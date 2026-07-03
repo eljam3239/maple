@@ -61,13 +61,17 @@ app.post("/session", async (req, res) => {
 
 app.post("/guess", async (req, res) => {
   try {
-    const { sessionId, city } = req.body as { sessionId?: string; city?: string };
+    const { sessionId, cityId, city } = req.body as {
+      sessionId?: string;
+      cityId?: number;
+      city?: string;
+    };
 
-    if (!sessionId || !city) {
+    if (!sessionId || (cityId === undefined && !city)) {
       return res.status(400).send({ error: "Missing sessionId or city" });
     }
 
-    const result = await evaluateGuess(sessionId, city);
+    const result = await evaluateGuess(sessionId, { cityId, cityName: city });
 
     res.send(result);
 
