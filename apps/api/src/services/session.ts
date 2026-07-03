@@ -2,6 +2,7 @@ import { PrismaClient } from "../generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { getOrCreateDailyPuzzle } from "./puzzle";
 import { computeProvinceDistance } from "../utils/provinces";
+import { computeStats } from "./stats";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -43,10 +44,19 @@ export async function getOrCreateSession(playerId: string) {
       where: { id: existing.targetCityId },
     });
 
+    const won = existing.guesses.some((g) => g.correct);
+
     return {
       sessionId: existing.id,
       puzzleDate: existing.puzzleDate,
       completed: existing.completed,
+      won,
+      // Reveal the target only once the game is over.
+      answer:
+        existing.completed && targetCity
+          ? { name: targetCity.name, latitude: targetCity.latitude, longitude: targetCity.longitude }
+          : undefined,
+      stats: await computeStats(playerId),
       guesses: existing.guesses.map((g) => {
         let populationHint: "larger" | "smaller" | "equal" = "equal";
         if (targetCity) {
@@ -82,6 +92,8 @@ export async function getOrCreateSession(playerId: string) {
     sessionId: session.id,
     puzzleDate: session.puzzleDate,
     completed: false,
+    won: false,
+    stats: await computeStats(playerId),
     guesses: [],
   };
 }

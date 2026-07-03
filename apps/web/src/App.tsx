@@ -2,11 +2,23 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup, useZoomPanContext } from 'react-simple-maps'
 import { geoConicConformal } from 'd3-geo'
 import { CityAutocomplete, type CityOption } from './CityAutocomplete'
+import { WinModal, type PlayerStats } from './WinModal'
+import { MAX_GUESSES } from '@maple/types'
 import './App.css'
+
+// The target city, revealed once the game is over.
+interface Answer {
+  name: string
+  latitude: number
+  longitude: number
+}
 
 // How far double-click / wheel zoom can go. High enough that a cluster of
 // guesses only 15-30 km apart spreads out into distinct, clickable pins.
 const MAX_ZOOM = 40
+
+// Reference date for the shareable puzzle number (Maple #N). Day 1 = launch.
+const LAUNCH_EPOCH = Date.UTC(2026, 0, 1)
 
 interface GuessResult {
   city: string
@@ -59,10 +71,12 @@ function MapContent({
   provincesGeoJSON,
   provinceDistances,
   guesses,
+  answer,
 }: {
   provincesGeoJSON: object
   provinceDistances: Record<string, number>
   guesses: GuessResult[]
+  answer: Answer | null
 }) {
   const { k } = useZoomPanContext()
   const [hovered, setHovered] = useState<number | null>(null)
@@ -133,6 +147,26 @@ function MapContent({
           </text>
         </Marker>
       )}
+      {/* Reveal the answer's location when the game was lost. Gold star so it
+          reads as "the target", distinct from the black guess pins. */}
+      {answer && (
+        <Marker coordinates={[answer.longitude, answer.latitude]}>
+          <circle r={7 / k} fill="#f1c40f" stroke="#fff" strokeWidth={1.5 / k} />
+          <text
+            x={11 / k}
+            dominantBaseline="middle"
+            fontSize={12 / k}
+            fontWeight={700}
+            fill="#b7791f"
+            stroke="#fff"
+            strokeWidth={3 / k}
+            paintOrder="stroke"
+            style={{ pointerEvents: 'none' }}
+          >
+            {answer.name}
+          </text>
+        </Marker>
+      )}
     </>
   )
 }
@@ -169,7 +203,12 @@ function App() {
   const [cities, setCities] = useState<CityOption[]>([])
   const [guesses, setGuesses] = useState<GuessResult[]>([])
   const [error, setError] = useState<string | null>(null)
-  const [solved, setSolved] = useState(false)
+  const [gameOver, setGameOver] = useState(false)
+  const [won, setWon] = useState(false)
+  const [answer, setAnswer] = useState<Answer | null>(null)
+  const [stats, setStats] = useState<PlayerStats | null>(null)
+  const [puzzleDate, setPuzzleDate] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [provincesGeoJSON, setProvincesGeoJSON] = useState<object | null>(null)
   // Map viewport, driven by double-click / wheel / drag. `center` is the geo
@@ -264,13 +303,19 @@ function App() {
         const data = await res.json()
 
         setSessionId(data.sessionId)
+        setPuzzleDate(data.puzzleDate)
+        if (data.stats) setStats(data.stats)
 
         if (data.guesses && data.guesses.length > 0) {
           setGuesses(data.guesses)
         }
 
+        // Game already finished today: restore win/loss + the revealed answer,
+        // but don't pop the modal automatically on a reload.
         if (data.completed) {
-          setSolved(true)
+          setGameOver(true)
+          setWon(data.won)
+          setAnswer(data.answer ?? null)
         }
       } catch {
         setError('Failed to start session')
@@ -282,7 +327,7 @@ function App() {
   }, [])
 
   async function submitGuess(guess: { cityId?: number; cityName: string }) {
-    if (!guess.cityName.trim() || !sessionId || solved) return
+    if (!guess.cityName.trim() || !sessionId || gameOver) return
 
     setLoading(true)
     setError(null)
@@ -302,10 +347,17 @@ function App() {
 
       // The response carries the canonical city name, so the guess list shows
       // the real spelling (e.g. "Montréal") rather than whatever was typed.
-      const entry: GuessResult = await res.json()
+      const data = await res.json()
+      const entry: GuessResult = data
       setGuesses(prev => [...prev, entry])
 
-      if (entry.correct) setSolved(true)
+      if (data.gameOver) {
+        if (data.stats) setStats(data.stats)
+        setWon(data.won)
+        setAnswer(data.answer ?? null)
+        setGameOver(true)
+        setShowModal(true)
+      }
     } catch {
       setError('Network error')
     } finally {
@@ -322,20 +374,51 @@ function App() {
     )
   }
 
+  const puzzleNumber = puzzleDate
+    ? Math.floor((Date.parse(puzzleDate) - LAUNCH_EPOCH) / 86_400_000) + 1
+    : 0
+  const answerCity = answer?.name ?? guesses.find(g => g.correct)?.city ?? ''
+  const guessesLeft = MAX_GUESSES - guesses.length
+
   return (
     <div className="app">
       <h1 className="app-title">🍁 Maple</h1>
 
-      {solved && (
-        <p className="success compact-status">🎉 You got it in {guesses.length} guess{guesses.length > 1 ? 'es' : ''}!</p>
+      {gameOver && (
+        <button
+          type="button"
+          className={`compact-status result-reopen ${won ? 'success' : 'defeat'}`}
+          onClick={() => setShowModal(true)}
+        >
+          {won
+            ? `🎉 Solved in ${guesses.length} guess${guesses.length > 1 ? 'es' : ''} — view results`
+            : `😔 Out of guesses — view results`}
+        </button>
       )}
 
-      {!solved && (
-        <CityAutocomplete
-          cities={cities}
-          guessedNames={guessedNames}
-          disabled={loading}
-          onSubmit={submitGuess}
+      {!gameOver && (
+        <>
+          <CityAutocomplete
+            cities={cities}
+            guessedNames={guessedNames}
+            disabled={loading}
+            onSubmit={submitGuess}
+          />
+          <p className="guesses-left">
+            {guessesLeft} of {MAX_GUESSES} guess{guessesLeft === 1 ? '' : 'es'} left
+          </p>
+        </>
+      )}
+
+      {showModal && (
+        <WinModal
+          onClose={() => setShowModal(false)}
+          won={won}
+          city={answerCity}
+          guessCount={guesses.length}
+          puzzleNumber={puzzleNumber}
+          stats={stats}
+          guesses={guesses}
         />
       )}
 
@@ -367,6 +450,7 @@ function App() {
                 provincesGeoJSON={provincesGeoJSON as object}
                 provinceDistances={provinceDistances}
                 guesses={guesses}
+                answer={gameOver && !won ? answer : null}
               />
             </ZoomableGroup>
           </ComposableMap>

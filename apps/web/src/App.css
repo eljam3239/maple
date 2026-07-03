@@ -295,3 +295,94 @@ tbody tr {
   font-weight: 600;
   box-shadow: inset 4px 0 0 #2e7d32;
 }
+
+/* --- Win modal --- */
+.result-reopen {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  background: none;
+}
+.result-reopen:hover {
+  text-decoration: underline;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: none;
+  background: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: #888;
+  cursor: pointer;
+}
+.modal-close:hover { color: #222; }
+
+.modal-emoji { font-size: 2.5rem; }
+.modal-title { margin: 0.25rem 0 0.5rem; font-size: 1.5rem; color: #222; }
+.modal-sub { margin: 0 0 1.25rem; color: #444; font-size: 0.95rem; }
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.stat-value { font-size: 1.5rem; font-weight: 700; color: #222; }
+.stat-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.03em; color: #888; }
+
+.stat-footer {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.share-btn {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #2e7d32;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.share-btn:hover { background: #276b2b; }
+
+.defeat {
+  color: #c0392b;
+  background: #fdecea;
+  border: 1px solid #f5c6c0;
+}
+
+.guesses-left {
+  text-align: center;
+  margin: -0.35rem 0 0.5rem;
+  font-size: 0.8rem;
+  color: #888;
+}

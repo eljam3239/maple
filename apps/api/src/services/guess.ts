@@ -2,6 +2,8 @@ import { PrismaClient } from "../generated/prisma";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { distanceKm, getDirection } from "../utils/geo";
 import { computeProvinceDistance } from "../utils/provinces";
+import { computeStats } from "./stats";
+import { MAX_GUESSES } from "@maple/types";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -21,6 +23,14 @@ export async function evaluateGuess(
 
   if (session.completed) {
     throw new Error("Session already completed");
+  }
+
+  // Enforce the per-puzzle guess cap. Reaching MAX_GUESSES ends the game as a
+  // loss (handled below), so a further guess should never arrive — but guard
+  // anyway in case a client submits past the limit.
+  const priorGuesses = await prisma.guess.count({ where: { sessionId } });
+  if (priorGuesses >= MAX_GUESSES) {
+    throw new Error("No guesses remaining");
   }
 
   // 2. Look up the guessed city. The client normally sends an id (picked from
@@ -75,12 +85,19 @@ export async function evaluateGuess(
     },
   });
 
-  // 6. If correct, mark session completed
-  if (correct) {
+  // 6. Resolve end-of-game. The game is over when solved, or when this guess
+  // exhausts the MAX_GUESSES budget (a loss).
+  const guessesUsed = priorGuesses + 1;
+  const guessesRemaining = MAX_GUESSES - guessesUsed;
+  const gameOver = correct || guessesRemaining <= 0;
+
+  let stats = undefined;
+  if (gameOver) {
     await prisma.gameSession.update({
       where: { id: sessionId },
       data: { completed: true },
     });
+    stats = await computeStats(session.playerId);
   }
 
   let populationHint: "larger" | "smaller" | "equal" = "equal";
@@ -98,5 +115,13 @@ export async function evaluateGuess(
     populationHint,
     latitude: guessedCity.latitude,
     longitude: guessedCity.longitude,
+    gameOver,
+    won: correct,
+    guessesRemaining,
+    // Reveal the target only once the game is over.
+    answer: gameOver
+      ? { name: targetCity.name, latitude: targetCity.latitude, longitude: targetCity.longitude }
+      : undefined,
+    stats,
   };
 }
