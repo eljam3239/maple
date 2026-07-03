@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { MAX_GUESSES } from '@maple/types'
+import { MapleLeaf } from './MapleLeaf'
 
 export interface PlayerStats {
   currentStreak: number
@@ -46,6 +47,33 @@ function directionEmoji(g: ShareGuess): string {
   return g.correct ? '🎯' : DIRECTION_EMOJI[g.direction] ?? '⬛'
 }
 
+// Copy to clipboard so the result can be pasted (e.g. into Discord). Prefers
+// the async Clipboard API; falls back to a hidden textarea + execCommand for
+// insecure contexts (plain http) where the Clipboard API is unavailable.
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+  } catch {
+    // fall through to the legacy path
+  }
+  try {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.opacity = '0'
+    document.body.appendChild(ta)
+    ta.select()
+    const ok = document.execCommand('copy')
+    document.body.removeChild(ta)
+    return ok
+  } catch {
+    return false
+  }
+}
+
 function buildShareText(
   puzzleNumber: number,
   won: boolean,
@@ -75,16 +103,7 @@ export function WinModal({ onClose, won, city, guessCount, puzzleNumber, stats, 
 
   async function share() {
     const text = buildShareText(puzzleNumber, won, guesses, stats)
-    try {
-      if (navigator.share) {
-        await navigator.share({ text })
-      } else {
-        await navigator.clipboard.writeText(text)
-        setCopied(true)
-      }
-    } catch {
-      // User dismissed the share sheet, or clipboard denied — ignore.
-    }
+    if (await copyToClipboard(text)) setCopied(true)
   }
 
   return (
@@ -92,7 +111,7 @@ export function WinModal({ onClose, won, city, guessCount, puzzleNumber, stats, 
       <div className="modal-card" role="dialog" aria-modal="true" aria-label={won ? 'You won' : 'Out of guesses'} onClick={e => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
 
-        <div className="modal-emoji">{won ? '🎉' : '😔'}</div>
+        <div className="modal-emoji">{won ? <MapleLeaf size={48} /> : '😔'}</div>
         <h2 className="modal-title">{won ? 'Solved it!' : 'Out of guesses'}</h2>
         <p className="modal-sub">
           {won ? (

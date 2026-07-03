@@ -3,6 +3,7 @@ import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup, useZoomPa
 import { geoConicConformal } from 'd3-geo'
 import { CityAutocomplete, type CityOption } from './CityAutocomplete'
 import { WinModal, type PlayerStats } from './WinModal'
+import { MapleLeaf } from './MapleLeaf'
 import { MAX_GUESSES } from '@maple/types'
 import './App.css'
 
@@ -368,7 +369,7 @@ function App() {
   if (loading && !sessionId) {
     return (
       <div className="app">
-        <h1>🍁 Maple</h1>
+        <h1 className="app-title"><MapleLeaf size={30} /> Maple</h1>
         <p>Loading...</p>
       </div>
     )
@@ -382,7 +383,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="app-title">🍁 Maple</h1>
+      <h1 className="app-title"><MapleLeaf size={30} /> Maple</h1>
 
       {gameOver && (
         <button
@@ -391,7 +392,7 @@ function App() {
           onClick={() => setShowModal(true)}
         >
           {won
-            ? `🎉 Solved in ${guesses.length} guess${guesses.length > 1 ? 'es' : ''} — view results`
+            ? `Solved in ${guesses.length} guess${guesses.length > 1 ? 'es' : ''} — view results`
             : `😔 Out of guesses — view results`}
         </button>
       )}
