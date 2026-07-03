@@ -65,6 +65,7 @@ function MapContent({
   guesses: GuessResult[]
 }) {
   const { k } = useZoomPanContext()
+  const [hovered, setHovered] = useState<number | null>(null)
   return (
     <>
       <Geographies geography={provincesGeoJSON as never}>
@@ -98,10 +99,40 @@ function MapContent({
             fill={g.correct ? '#f1c40f' : '#111'}
             stroke="#fff"
             strokeWidth={1.5 / k}
+            style={{ cursor: 'pointer' }}
+            onMouseEnter={() => setHovered(i)}
+            onMouseLeave={() => setHovered((h) => (h === i ? null : h))}
           />
-          <title>{g.city}</title>
         </Marker>
       ))}
+      {/* Hovered pin drawn on top of the whole cluster so its label is never
+          occluded by neighbouring pins — the case that matters most when zoomed
+          into a dense group. Counter-scaled, with a white halo (paint-order:
+          stroke) so the city name stays legible over any map colour. */}
+      {hovered !== null && guesses[hovered] && (
+        <Marker coordinates={[guesses[hovered].longitude, guesses[hovered].latitude]}>
+          <circle
+            r={((guesses[hovered].correct ? 6 : 4) * 1.4) / k}
+            fill={guesses[hovered].correct ? '#f1c40f' : '#111'}
+            stroke="#fff"
+            strokeWidth={1.5 / k}
+            style={{ pointerEvents: 'none' }}
+          />
+          <text
+            x={10 / k}
+            dominantBaseline="middle"
+            fontSize={12 / k}
+            fontWeight={700}
+            fill="#111"
+            stroke="#fff"
+            strokeWidth={3 / k}
+            paintOrder="stroke"
+            style={{ pointerEvents: 'none' }}
+          >
+            {guesses[hovered].city}
+          </text>
+        </Marker>
+      )}
     </>
   )
 }
