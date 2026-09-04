@@ -176,6 +176,20 @@
 
 .howto-list li + li { margin-top: 0.4rem; }
 
+/* Attribution footer inside the how-to panel, separated by a hairline so it
+   reads as a credit rather than a sixth instruction. */
+.howto-credits {
+  margin: 0.7rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid #eee;
+  font-size: 0.7rem;
+  color: #9aa5b1;
+}
+
+.howto-credits a {
+  color: #6b7684;
+}
+
 @media (max-width: 720px) {
   .lang-picker {
     font-size: 0.8rem;
