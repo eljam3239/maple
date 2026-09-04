@@ -1,10 +1,6 @@
 import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "../src/db";
 import cities from "./data/canadian_cities_full.json";
-
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // Full rebuild: canonical names changed (e.g. "Montreal" -> "Montréal"), so a

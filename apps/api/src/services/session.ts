@@ -1,11 +1,7 @@
-import { PrismaClient } from "../generated/prisma";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { prisma } from "../db";
 import { getOrCreateDailyPuzzle } from "./puzzle";
 import { computeProvinceDistance } from "../utils/provinces";
 import { computeStats } from "./stats";
-
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
 
 export async function createPlayer() {
   const player = await prisma.player.create({ data: {} });

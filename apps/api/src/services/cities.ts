@@ -1,8 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+import { prisma } from "../db";
 
 // Names of guessable cities are not secret — only the daily target is hidden.
 // Shipping the full list lets the client offer instant autocomplete without a
