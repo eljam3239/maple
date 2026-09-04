@@ -8,6 +8,7 @@ import { LanguagePicker } from './LanguagePicker'
 import { HowTo } from './HowTo'
 import { GitHubLink } from './GitHubLink'
 import { useLang } from './i18n/LanguageContext'
+import type { Dict } from './i18n/translations'
 import { MAX_GUESSES } from '@maple/types'
 import './App.css'
 
@@ -57,6 +58,19 @@ function Wordmark() {
       Map<span className="wordmark-accent">le</span>
     </span>
   )
+}
+
+// The API reports expected failures with a stable `code`; the message beside it
+// is English and meant for logs. Translate the code and fall back to a generic
+// line, so an unrecognised or missing code never surfaces raw server text.
+function apiErrorMessage(code: string | undefined, t: Dict): string {
+  switch (code) {
+    case 'SESSION_NOT_FOUND': return t.errSessionNotFound
+    case 'SESSION_COMPLETED': return t.errSessionCompleted
+    case 'NO_GUESSES_REMAINING': return t.errNoGuesses
+    case 'CITY_NOT_FOUND': return t.errCityNotFound
+    default: return t.errGeneric
+  }
 }
 
 // Two-letter codes for the guess table — full province names are too wide for
@@ -398,8 +412,8 @@ function App() {
       })
 
       if (!res.ok) {
-        const err = await res.json()
-        setError(err.error || t.errGeneric)
+        const err = await res.json().catch(() => ({}))
+        setError(apiErrorMessage(err.code, t))
         return
       }
 

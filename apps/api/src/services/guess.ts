@@ -4,6 +4,7 @@ import { distanceKm, getDirection } from "../utils/geo";
 import { computeProvinceDistance } from "../utils/provinces";
 import { computeStats } from "./stats";
 import { MAX_GUESSES } from "@maple/types";
+import { GameError } from "../errors";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -18,11 +19,11 @@ export async function evaluateGuess(
   });
 
   if (!session) {
-    throw new Error("Session not found");
+    throw new GameError("SESSION_NOT_FOUND", "Session not found");
   }
 
   if (session.completed) {
-    throw new Error("Session already completed");
+    throw new GameError("SESSION_COMPLETED", "Session already completed");
   }
 
   // Enforce the per-puzzle guess cap. Reaching MAX_GUESSES ends the game as a
@@ -30,7 +31,7 @@ export async function evaluateGuess(
   // anyway in case a client submits past the limit.
   const priorGuesses = await prisma.guess.count({ where: { sessionId } });
   if (priorGuesses >= MAX_GUESSES) {
-    throw new Error("No guesses remaining");
+    throw new GameError("NO_GUESSES_REMAINING", "No guesses remaining");
   }
 
   // 2. Look up the guessed city. The client normally sends an id (picked from
@@ -45,7 +46,7 @@ export async function evaluateGuess(
     : null;
 
   if (!guessedCity) {
-    throw new Error("City not found");
+    throw new GameError("CITY_NOT_FOUND", "City not found");
   }
 
   // 3. Look up the target city
