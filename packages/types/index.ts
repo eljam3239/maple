@@ -14,6 +14,7 @@ export interface PlayerStats {
 // The target city, revealed to the client only once the game is over.
 export interface CityRef {
   name: string;
+  province: string;
   latitude: number;
   longitude: number;
 }

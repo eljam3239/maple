@@ -120,7 +120,12 @@ export async function evaluateGuess(
     guessesRemaining,
     // Reveal the target only once the game is over.
     answer: gameOver
-      ? { name: targetCity.name, latitude: targetCity.latitude, longitude: targetCity.longitude }
+      ? {
+          name: targetCity.name,
+          province: targetCity.province,
+          latitude: targetCity.latitude,
+          longitude: targetCity.longitude,
+        }
       : undefined,
     stats,
   };

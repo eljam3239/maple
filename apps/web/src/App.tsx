@@ -2,10 +2,11 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup, useZoomPanContext } from 'react-simple-maps'
 import { geoConicConformal } from 'd3-geo'
 import { CityAutocomplete, type CityOption } from './CityAutocomplete'
-import { WinModal, type PlayerStats } from './WinModal'
+import { WinModal, type AnswerPlace, type PlayerStats } from './WinModal'
 import { MapleLeaf } from './MapleLeaf'
 import { LanguagePicker } from './LanguagePicker'
 import { HowTo } from './HowTo'
+import { GitHubLink } from './GitHubLink'
 import { useLang } from './i18n/LanguageContext'
 import { MAX_GUESSES } from '@maple/types'
 import './App.css'
@@ -13,6 +14,7 @@ import './App.css'
 // The target city, revealed once the game is over.
 interface Answer {
   name: string
+  province: string
   latitude: number
   longitude: number
 }
@@ -44,6 +46,53 @@ function provinceFill(dist: number | undefined): string {
   if (dist === 1) return '#E31A1C'
   if (dist === 2) return '#FED976'
   return '#FFEDA0'
+}
+
+// The wordmark. "Maple" is a brand name, so it isn't translated — it lives here
+// rather than in the dictionaries. The trailing "le" is tinted the same red as
+// the leaf in MapleLeaf, so the two halves of the logo match.
+function Wordmark() {
+  return (
+    <span className="wordmark">
+      Map<span className="wordmark-accent">le</span>
+    </span>
+  )
+}
+
+// Two-letter codes for the guess table — full province names are too wide for
+// the guess pane, which is only ~38% of the viewport.
+const PROVINCE_ABBR: Record<string, string> = {
+  Alberta: 'AB',
+  'British Columbia': 'BC',
+  Manitoba: 'MB',
+  'New Brunswick': 'NB',
+  'Newfoundland and Labrador': 'NL',
+  'Northwest Territories': 'NT',
+  'Nova Scotia': 'NS',
+  Nunavut: 'NU',
+  Ontario: 'ON',
+  'Prince Edward Island': 'PE',
+  Quebec: 'QC',
+  Saskatchewan: 'SK',
+  Yukon: 'YT',
+}
+
+// Plain arrow glyphs rather than emoji: they inherit the row's text colour and
+// weight, so the column reads as typography instead of stickers. (The share
+// grid still uses emoji — see DIRECTION_EMOJI in WinModal — because that text
+// gets pasted somewhere with no styling of ours.)
+const DIRECTION_ARROW: Record<string, string> = {
+  N: '↑', NE: '↗', E: '→', SE: '↘',
+  S: '↓', SW: '↙', W: '←', NW: '↖',
+}
+
+// Heat bucket for a guess, used to tint the distance pill. Thresholds match the
+// share grid's proximity squares so the two tell the same story.
+function proximityClass(distanceKm: number): string {
+  if (distanceKm <= 150) return 'prox-hot'
+  if (distanceKm <= 750) return 'prox-warm'
+  if (distanceKm <= 2000) return 'prox-cool'
+  return 'prox-cold'
 }
 
 const LEGEND_ITEMS: { color: string; key: 'legendSame' | 'legend1' | 'legend2' | 'legend3plus' }[] = [
@@ -204,7 +253,7 @@ async function getOrCreatePlayerId(): Promise<string> {
 }
 
 function App() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [cities, setCities] = useState<CityOption[]>([])
   const [guesses, setGuesses] = useState<GuessResult[]>([])
@@ -378,10 +427,11 @@ function App() {
     return (
       <div className="app">
         <header className="app-header">
-          <h1 className="app-title"><MapleLeaf size={30} /> {t.appTitle}</h1>
+          <h1 className="app-title"><MapleLeaf size={30} /> <Wordmark /></h1>
           <div className="header-controls">
             <LanguagePicker />
             <HowTo />
+            <GitHubLink />
           </div>
         </header>
         <p>{t.loading}</p>
@@ -392,16 +442,31 @@ function App() {
   const puzzleNumber = puzzleDate
     ? Math.floor((Date.parse(puzzleDate) - LAUNCH_EPOCH) / 86_400_000) + 1
     : 0
-  const answerCity = answer?.name ?? guesses.find(g => g.correct)?.city ?? ''
+  // The revealed target, for both the modal copy and the Native-Land deep link.
+  // The server sends `answer` once the game is over; on a win we can also
+  // recover it from the winning guess, which carries the same city and coords.
+  const winningGuess = guesses.find(g => g.correct)
+  const answerPlace: AnswerPlace | null =
+    answer ??
+    (winningGuess
+      ? {
+          name: winningGuess.city,
+          province: winningGuess.province,
+          latitude: winningGuess.latitude,
+          longitude: winningGuess.longitude,
+        }
+      : null)
+  const answerCity = answerPlace?.name ?? ''
   const guessesLeft = MAX_GUESSES - guesses.length
 
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title"><MapleLeaf size={30} /> {t.appTitle}</h1>
+        <h1 className="app-title"><MapleLeaf size={30} /> <Wordmark /></h1>
         <div className="header-controls">
           <LanguagePicker />
           <HowTo />
+          <GitHubLink />
         </div>
       </header>
 
@@ -434,6 +499,7 @@ function App() {
           onClose={() => setShowModal(false)}
           won={won}
           city={answerCity}
+          place={answerPlace}
           guessCount={guesses.length}
           puzzleNumber={puzzleNumber}
           stats={stats}
@@ -485,11 +551,11 @@ function App() {
 
       <div className="guess-pane">
       {guesses.length > 0 ? (
-        <table>
+        <table className="guess-table">
           <thead>
             <tr>
-              <th>{t.thNum}</th>
-              <th>{t.thCity}</th>
+              <th className="col-num">{t.thNum}</th>
+              <th className="col-city">{t.thCity}</th>
               <th>{t.thProvince}</th>
               <th>{t.thDistance}</th>
               <th>{t.thDirection}</th>
@@ -499,12 +565,41 @@ function App() {
           <tbody>
             {guesses.map((g, i) => (
               <tr key={i} className={g.correct ? 'correct-row' : ''}>
-                <td>{i + 1}</td>
-                <td>{g.city}</td>
-                <td>{g.provinceMatch ? '✅' : '❌'}</td>
-                <td>{g.distanceKm} km</td>
-                <td>{g.direction}</td>
-                <td>{g.correct ? '—' : g.populationHint === 'larger' ? t.popLarger : g.populationHint === 'smaller' ? t.popSmaller : '='}</td>
+                <td className="col-num">{i + 1}</td>
+                <td className="col-city">{g.city}</td>
+                <td>
+                  {/* The dot reuses the map's province-distance palette, so the
+                      table and the map agree at a glance. */}
+                  <span className="prov-tag">
+                    <span
+                      className="prov-dot"
+                      style={{ background: provinceFill(g.provinceDistance) }}
+                    />
+                    {PROVINCE_ABBR[g.province] ?? g.province}
+                  </span>
+                </td>
+                <td>
+                  <span className={`dist-pill ${g.correct ? 'prox-found' : proximityClass(g.distanceKm)}`}>
+                    {g.distanceKm.toLocaleString(lang)} km
+                  </span>
+                </td>
+                <td className="col-dir">
+                  {g.correct ? '·' : DIRECTION_ARROW[g.direction] ?? g.direction}
+                </td>
+                <td className="col-pop">
+                  {g.correct ? (
+                    '·'
+                  ) : g.populationHint === 'equal' ? (
+                    '='
+                  ) : (
+                    <>
+                      <span className="pop-arrow">
+                        {g.populationHint === 'larger' ? '▲' : '▼'}
+                      </span>{' '}
+                      {g.populationHint === 'larger' ? t.popLarger : t.popSmaller}
+                    </>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
