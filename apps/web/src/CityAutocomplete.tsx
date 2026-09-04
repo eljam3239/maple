@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLang } from './i18n/LanguageContext'
 
 export interface CityOption {
   id: number
@@ -50,6 +51,7 @@ function rankCity(query: string, city: CityOption): number {
 }
 
 export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: Props) {
+  const { t } = useLang()
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const [highlight, setHighlight] = useState(0)
@@ -134,7 +136,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Guess a Canadian city..."
+          placeholder={t.acPlaceholder}
           // Intentionally not disabled while a guess is in flight: disabling
           // blurs the input and drops the first keystroke of the next guess.
           role="combobox"
@@ -144,7 +146,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
           autoComplete="off"
         />
         <button type="button" onClick={submitQuery} disabled={disabled || !query.trim()}>
-          Guess
+          {t.guessBtn}
         </button>
       </div>
 
@@ -169,7 +171,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
               >
                 <span className="ac-city">{city.name}</span>
                 <span className="ac-province">{city.province}</span>
-                {already && <span className="ac-guessed-tag">guessed</span>}
+                {already && <span className="ac-guessed-tag">{t.guessedTag}</span>}
               </li>
             )
           })}

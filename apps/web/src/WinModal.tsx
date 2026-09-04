@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { MAX_GUESSES } from '@maple/types'
 import { MapleLeaf } from './MapleLeaf'
+import { useLang } from './i18n/LanguageContext'
 
 export interface PlayerStats {
   currentStreak: number
@@ -90,6 +91,7 @@ function buildShareText(
 
 // Rendered only while open (parent gates the mount), so it always starts fresh.
 export function WinModal({ onClose, won, city, guessCount, puzzleNumber, stats, guesses }: Props) {
+  const { t } = useLang()
   const [copied, setCopied] = useState(false)
 
   // Close on Escape.
@@ -108,43 +110,34 @@ export function WinModal({ onClose, won, city, guessCount, puzzleNumber, stats, 
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-card" role="dialog" aria-modal="true" aria-label={won ? 'You won' : 'Out of guesses'} onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+      <div className="modal-card" role="dialog" aria-modal="true" aria-label={won ? t.ariaWon : t.ariaLost} onClick={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose} aria-label={t.close}>×</button>
 
         <div className="modal-emoji">{won ? <MapleLeaf size={48} /> : '😔'}</div>
-        <h2 className="modal-title">{won ? 'Solved it!' : 'Out of guesses'}</h2>
+        <h2 className="modal-title">{won ? t.modalTitleWon : t.modalTitleLost}</h2>
         <p className="modal-sub">
-          {won ? (
-            <>
-              Today's city was <strong>{city}</strong> — you got it in{' '}
-              <strong>{guessCount}</strong> guess{guessCount === 1 ? '' : 'es'}.
-            </>
-          ) : (
-            <>
-              The city was <strong>{city}</strong>. Better luck tomorrow!
-            </>
-          )}
+          {won ? t.modalSubWon(city, guessCount) : t.modalSubLost(city)}
         </p>
 
         {stats && (
           <>
             <div className="stat-row">
-              <Stat label="Played" value={stats.gamesPlayed} />
-              <Stat label="Won" value={stats.wins} />
-              <Stat label="Win %" value={stats.winPct} />
-              <Stat label="Streak" value={stats.currentStreak} />
-              <Stat label="Max streak" value={stats.maxStreak} />
-              <Stat label="Avg. guesses" value={stats.avgGuesses || '—'} />
+              <Stat label={t.statPlayed} value={stats.gamesPlayed} />
+              <Stat label={t.statWon} value={stats.wins} />
+              <Stat label={t.statWinPct} value={stats.winPct} />
+              <Stat label={t.statStreak} value={stats.currentStreak} />
+              <Stat label={t.statMaxStreak} value={stats.maxStreak} />
+              <Stat label={t.statAvgGuesses} value={stats.avgGuesses || '—'} />
             </div>
             <p className="stat-footer">
-              {stats.lastWin && <>Last win: {stats.lastWin} · </>}
-              Today: {guessCount} guess{guessCount === 1 ? '' : 'es'}
+              {stats.lastWin && <>{t.lastWin(stats.lastWin)} · </>}
+              {t.todayGuesses(guessCount)}
             </p>
           </>
         )}
 
         <button className="share-btn" onClick={share}>
-          {copied ? 'Copied!' : 'Share'}
+          {copied ? t.copied : t.share}
         </button>
       </div>
     </div>

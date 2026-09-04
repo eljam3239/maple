@@ -52,6 +52,15 @@
   }
 }
 
+/* Header keeps the title optically centred while the language picker sits in
+   the top-right corner. position:relative anchors the absolutely-placed picker. */
+.app-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .app-title {
   display: flex;
   align-items: center;
@@ -60,6 +69,33 @@
   font-size: clamp(1.8rem, 3vw, 2.6rem);
   line-height: 1;
   margin: 0 0 0.5rem;
+}
+
+.lang-picker {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: #2c3e50;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  max-width: 45vw;
+}
+
+.lang-picker:focus-visible {
+  outline: 2px solid #34495e;
+  outline-offset: 1px;
+}
+
+@media (max-width: 720px) {
+  .lang-picker {
+    font-size: 0.8rem;
+    max-width: 40vw;
+  }
 }
 
 .guess-form {

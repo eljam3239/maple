@@ -4,6 +4,8 @@ import { geoConicConformal } from 'd3-geo'
 import { CityAutocomplete, type CityOption } from './CityAutocomplete'
 import { WinModal, type PlayerStats } from './WinModal'
 import { MapleLeaf } from './MapleLeaf'
+import { LanguagePicker } from './LanguagePicker'
+import { useLang } from './i18n/LanguageContext'
 import { MAX_GUESSES } from '@maple/types'
 import './App.css'
 
@@ -43,21 +45,22 @@ function provinceFill(dist: number | undefined): string {
   return '#FFEDA0'
 }
 
-const LEGEND_ITEMS = [
-  { color: '#800026', label: 'Same province' },
-  { color: '#E31A1C', label: '1 province away' },
-  { color: '#FED976', label: '2 provinces away' },
-  { color: '#FFEDA0', label: '3+ provinces away' },
+const LEGEND_ITEMS: { color: string; key: 'legendSame' | 'legend1' | 'legend2' | 'legend3plus' }[] = [
+  { color: '#800026', key: 'legendSame' },
+  { color: '#E31A1C', key: 'legend1' },
+  { color: '#FED976', key: 'legend2' },
+  { color: '#FFEDA0', key: 'legend3plus' },
 ]
 
 function MapLegend() {
+  const { t } = useLang()
   return (
     <div className="map-legend">
-      <strong>Province distance</strong>
-      {LEGEND_ITEMS.map(({ color, label }) => (
-        <div className="legend-row" key={label}>
+      <strong>{t.legendTitle}</strong>
+      {LEGEND_ITEMS.map(({ color, key }) => (
+        <div className="legend-row" key={key}>
           <span className="legend-swatch" style={{ background: color }} />
-          {label}
+          {t[key]}
         </div>
       ))}
     </div>
@@ -200,6 +203,7 @@ async function getOrCreatePlayerId(): Promise<string> {
 }
 
 function App() {
+  const { t } = useLang()
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [cities, setCities] = useState<CityOption[]>([])
   const [guesses, setGuesses] = useState<GuessResult[]>([])
@@ -319,12 +323,15 @@ function App() {
           setAnswer(data.answer ?? null)
         }
       } catch {
-        setError('Failed to start session')
+        setError(t.errFailedSession)
       } finally {
         setLoading(false)
       }
     }
     init()
+    // Mount-only: session init runs once. `t` is read for the failure message
+    // but must not re-trigger init on a language switch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function submitGuess(guess: { cityId?: number; cityName: string }) {
@@ -342,7 +349,7 @@ function App() {
 
       if (!res.ok) {
         const err = await res.json()
-        setError(err.error || 'Something went wrong')
+        setError(err.error || t.errGeneric)
         return
       }
 
@@ -360,7 +367,7 @@ function App() {
         setShowModal(true)
       }
     } catch {
-      setError('Network error')
+      setError(t.errNetwork)
     } finally {
       setLoading(false)
     }
@@ -369,8 +376,11 @@ function App() {
   if (loading && !sessionId) {
     return (
       <div className="app">
-        <h1 className="app-title"><MapleLeaf size={30} /> Maple</h1>
-        <p>Loading...</p>
+        <header className="app-header">
+          <h1 className="app-title"><MapleLeaf size={30} /> {t.appTitle}</h1>
+          <LanguagePicker />
+        </header>
+        <p>{t.loading}</p>
       </div>
     )
   }
@@ -383,7 +393,10 @@ function App() {
 
   return (
     <div className="app">
-      <h1 className="app-title"><MapleLeaf size={30} /> Maple</h1>
+      <header className="app-header">
+        <h1 className="app-title"><MapleLeaf size={30} /> {t.appTitle}</h1>
+        <LanguagePicker />
+      </header>
 
       {gameOver && (
         <button
@@ -391,9 +404,7 @@ function App() {
           className={`compact-status result-reopen ${won ? 'success' : 'defeat'}`}
           onClick={() => setShowModal(true)}
         >
-          {won
-            ? `Solved in ${guesses.length} guess${guesses.length > 1 ? 'es' : ''} — view results`
-            : `😔 Out of guesses — view results`}
+          {won ? t.solvedBanner(guesses.length) : t.outOfGuessesBanner}
         </button>
       )}
 
@@ -406,7 +417,7 @@ function App() {
             onSubmit={submitGuess}
           />
           <p className="guesses-left">
-            {guessesLeft} of {MAX_GUESSES} guess{guessesLeft === 1 ? '' : 'es'} left
+            {t.guessesLeft(guessesLeft, MAX_GUESSES)}
           </p>
         </>
       )}
@@ -458,10 +469,10 @@ function App() {
         )}
         {zoom > 1.01 && (
           <button type="button" className="map-back" onClick={resetView}>
-            ← Canada
+            {t.mapBack}
           </button>
         )}
-        <p className="map-hint">Double-click or scroll to zoom · drag to pan</p>
+        <p className="map-hint">{t.mapHint}</p>
         <MapLegend />
       </div>
 
@@ -470,12 +481,12 @@ function App() {
         <table>
           <thead>
             <tr>
-              <th>#</th>
-              <th>City</th>
-              <th>Province</th>
-              <th>Distance</th>
-              <th>Direction</th>
-              <th>Population</th>
+              <th>{t.thNum}</th>
+              <th>{t.thCity}</th>
+              <th>{t.thProvince}</th>
+              <th>{t.thDistance}</th>
+              <th>{t.thDirection}</th>
+              <th>{t.thPopulation}</th>
             </tr>
           </thead>
           <tbody>
@@ -486,13 +497,13 @@ function App() {
                 <td>{g.provinceMatch ? '✅' : '❌'}</td>
                 <td>{g.distanceKm} km</td>
                 <td>{g.direction}</td>
-                <td>{g.correct ? '—' : g.populationHint === 'larger' ? '⬆️ larger' : g.populationHint === 'smaller' ? '⬇️ smaller' : '='}</td>
+                <td>{g.correct ? '—' : g.populationHint === 'larger' ? t.popLarger : g.populationHint === 'smaller' ? t.popSmaller : '='}</td>
               </tr>
             ))}
           </tbody>
         </table>
       ) : (
-        <p className="guess-empty">Your guesses will appear here.</p>
+        <p className="guess-empty">{t.guessesEmpty}</p>
       )}
       </div>
       </div>
