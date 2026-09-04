@@ -53,6 +53,24 @@ pnpm dev                          # API on :3000, web on :5173
 
 The web dev server proxies `/api/*` to the API, so both need to be running.
 
+`pnpm seed` is destructive — it deletes every guess, session and daily puzzle
+and reassigns city ids. It refuses to run against a database that already has
+game sessions; `SEED_FORCE=1` overrides that.
+
+### Environment
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string. Required. |
+| `PGSSLROOTCERT` | Path to the database's CA certificate. Without it (or `DATABASE_CA_CERT`) the connection is encrypted but the server's identity is **not verified**, and the API logs a warning at startup. |
+| `DATABASE_CA_CERT` | The CA certificate inline as PEM, for hosts that only take env vars. |
+| `DATABASE_POOL_MAX` | Connections in the pool (default 10). Budget it against your database's limit and the number of instances you run. |
+| `PORT` / `HOST` | Defaults `3000` and `0.0.0.0`. |
+
+On Supabase the CA comes from Project Settings → Database → SSL Configuration.
+Its certificate is issued by a private Supabase CA that Node does not trust by
+default, so `sslmode=require` in the URL fails; supply the CA instead.
+
 ### Rebuilding the city data
 
 `apps/api/prisma/data/canadian_cities_full.json` is committed, so you only need
