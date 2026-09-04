@@ -78,6 +78,7 @@ export interface Dict {
   howToLabel: string
   howToTitle: string
   howToSteps: (max: number) => ReactNode[]
+  creditsCityData: string
 
   githubLabel: string
   languageLabel: string
@@ -158,6 +159,7 @@ const en: Dict = {
     <>The map shades each province by how far it is from the answer's province.</>,
     <>A new city every day. Come back tomorrow!</>,
   ],
+  creditsCityData: 'City data',
 
   githubLabel: 'Source on GitHub',
   languageLabel: 'Language',
@@ -238,6 +240,7 @@ const fr: Dict = {
     <>La carte colore chaque province selon sa distance de la province de la réponse.</>,
     <>Une nouvelle ville chaque jour. Revenez demain !</>,
   ],
+  creditsCityData: 'Données des villes',
 
   githubLabel: 'Code source sur GitHub',
   languageLabel: 'Langue',
