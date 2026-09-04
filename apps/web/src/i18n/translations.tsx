@@ -29,6 +29,11 @@ export interface Dict {
   errFailedSession: string
   errGeneric: string
   errNetwork: string
+  // Keyed by the API's GameError codes
+  errSessionNotFound: string
+  errSessionCompleted: string
+  errNoGuesses: string
+  errCityNotFound: string
 
   // Guess table
   thNum: string
@@ -101,6 +106,10 @@ const en: Dict = {
   errFailedSession: 'Failed to start session',
   errGeneric: 'Something went wrong',
   errNetwork: 'Network error',
+  errSessionNotFound: 'Your session expired — reload to start again.',
+  errSessionCompleted: "You've already finished today's puzzle.",
+  errNoGuesses: 'No guesses left for today.',
+  errCityNotFound: "That city isn't in the list.",
 
   thNum: '#',
   thCity: 'City',
@@ -182,6 +191,10 @@ const fr: Dict = {
   errFailedSession: 'Échec du démarrage de la session',
   errGeneric: 'Une erreur s’est produite',
   errNetwork: 'Erreur réseau',
+  errSessionNotFound: 'Votre session a expiré — rechargez pour recommencer.',
+  errSessionCompleted: 'Vous avez déjà terminé le casse-tête d’aujourd’hui.',
+  errNoGuesses: 'Plus d’essais pour aujourd’hui.',
+  errCityNotFound: 'Cette ville n’est pas dans la liste.',
 
   thNum: '#',
   thCity: 'Ville',
