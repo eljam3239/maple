@@ -1,16 +1,14 @@
 import type { ReactNode } from 'react'
 
-// Supported UI languages. English and French are fully translated; the three
-// Indigenous languages are wired up and selectable but fall back to English
-// until a native speaker supplies real strings (see `cr` / `iu` / `oj` below).
-export type Lang = 'en' | 'fr' | 'cr' | 'iu' | 'oj'
+// Supported UI languages. Canada's two official languages, both fully
+// translated. Adding one means adding its `Dict` and a `LANGUAGES` entry.
+export type Lang = 'en' | 'fr'
 
 export const DEFAULT_LANG: Lang = 'en'
 
 // Every user-facing string in the app. Values that need a count or an
 // interpolated name (or embedded <strong>) are functions; everything else is a
-// plain string. Each language must implement this shape — except the Indigenous
-// languages, which provide a Partial merged over English (see `dicts`).
+// plain string. Every language must implement this shape in full.
 export interface Dict {
   appTitle: string
   loading: string
@@ -71,6 +69,11 @@ export interface Dict {
   todayGuesses: (guessCount: number) => string
   share: string
   copied: string
+
+  // How-to-play popover
+  howToLabel: string
+  howToTitle: string
+  howToSteps: (max: number) => ReactNode[]
 
   languageLabel: string
 }
@@ -138,6 +141,16 @@ const en: Dict = {
   share: 'Share',
   copied: 'Copied!',
 
+  howToLabel: 'How to play',
+  howToTitle: 'How to play',
+  howToSteps: (max) => [
+    <>Guess the mystery Canadian city in <strong>{max}</strong> tries.</>,
+    <>Every guess must be a real Canadian city — start typing and pick one from the list.</>,
+    <>After each guess you'll see the <strong>distance</strong> and <strong>direction</strong> to the target, and whether its population is larger or smaller.</>,
+    <>The map shades each province by how far it is from the answer's province.</>,
+    <>A new city every day. Come back tomorrow!</>,
+  ],
+
   languageLabel: 'Language',
 }
 
@@ -204,46 +217,24 @@ const fr: Dict = {
   share: 'Partager',
   copied: 'Copié !',
 
+  howToLabel: 'Comment jouer',
+  howToTitle: 'Comment jouer',
+  howToSteps: (max) => [
+    <>Devinez la ville canadienne mystère en <strong>{max}</strong> essais.</>,
+    <>Chaque essai doit être une vraie ville canadienne — commencez à taper et choisissez dans la liste.</>,
+    <>Après chaque essai, vous verrez la <strong>distance</strong> et la <strong>direction</strong> vers la cible, et si sa population est plus grande ou plus petite.</>,
+    <>La carte colore chaque province selon sa distance de la province de la réponse.</>,
+    <>Une nouvelle ville chaque jour. Revenez demain !</>,
+  ],
+
   languageLabel: 'Langue',
 }
 
-// ---------------------------------------------------------------------------
-// Indigenous languages — scaffolded, NOT yet translated.
-//
-// These are intentionally empty. Each is spread over `en` in `dicts` below, so
-// any key left out here transparently falls back to the English string. That
-// keeps the language selectable and the app fully functional while we source
-// accurate translations from native speakers.
-//
-// Do NOT fill these with machine translation — Plains Cree (syllabics),
-// Inuktitut (syllabics), and Ojibwe (double-vowel roman / syllabics) need a
-// fluent translator, and the right dialect matters. Add keys incrementally as
-// verified strings come in; partial coverage is fine.
-// ---------------------------------------------------------------------------
-
-/** Nēhiyawēwin (Plains Cree) — TODO: native translation. */
-const cr: Partial<Dict> = {}
-
-/** ᐃᓄᒃᑎᑐᑦ (Inuktitut) — TODO: native translation. */
-const iu: Partial<Dict> = {}
-
-/** Anishinaabemowin (Ojibwe) — TODO: native translation. */
-const oj: Partial<Dict> = {}
-
-export const dicts: Record<Lang, Dict> = {
-  en,
-  fr,
-  cr: { ...en, ...cr },
-  iu: { ...en, ...iu },
-  oj: { ...en, ...oj },
-}
+export const dicts: Record<Lang, Dict> = { en, fr }
 
 // Display order and labels for the picker. Labels are each language's own
-// autonym with the English name in parentheses for recognition.
+// autonym.
 export const LANGUAGES: { code: Lang; label: string }[] = [
   { code: 'en', label: 'English' },
   { code: 'fr', label: 'Français' },
-  { code: 'cr', label: 'Nēhiyawēwin (Cree)' },
-  { code: 'iu', label: 'ᐃᓄᒃᑎᑐᑦ (Inuktitut)' },
-  { code: 'oj', label: 'Anishinaabemowin (Ojibwe)' },
 ]

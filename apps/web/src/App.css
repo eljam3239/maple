@@ -52,8 +52,9 @@
   }
 }
 
-/* Header keeps the title optically centred while the language picker sits in
-   the top-right corner. position:relative anchors the absolutely-placed picker. */
+/* Header keeps the title optically centred while the language picker and the
+   how-to button sit in the top-right corner. position:relative anchors the
+   absolutely-placed control cluster. */
 .app-header {
   position: relative;
   display: flex;
@@ -71,10 +72,16 @@
   margin: 0 0 0.5rem;
 }
 
-.lang-picker {
+.header-controls {
   position: absolute;
   top: 0;
   right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.lang-picker {
   padding: 0.3rem 0.5rem;
   font-size: 0.85rem;
   font-family: inherit;
@@ -86,10 +93,68 @@
   max-width: 45vw;
 }
 
-.lang-picker:focus-visible {
+.lang-picker:focus-visible,
+.howto-btn:focus-visible {
   outline: 2px solid #34495e;
   outline-offset: 1px;
 }
+
+/* --- How-to-play popover --- */
+
+.howto {
+  position: relative;
+  display: flex;
+}
+
+.howto-btn {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1;
+  color: #2c3e50;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.howto-btn:hover { background: #f2f4f6; }
+
+/* Anchored under the button; the viewport-relative max-width keeps it on
+   screen on narrow phones, where the button sits close to the right edge. */
+.howto-panel {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  z-index: 1000;
+  width: 20rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.9rem 1rem;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.howto-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #222;
+}
+
+.howto-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #444;
+}
+
+.howto-list li + li { margin-top: 0.4rem; }
 
 @media (max-width: 720px) {
   .lang-picker {

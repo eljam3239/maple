@@ -5,6 +5,7 @@ import { CityAutocomplete, type CityOption } from './CityAutocomplete'
 import { WinModal, type PlayerStats } from './WinModal'
 import { MapleLeaf } from './MapleLeaf'
 import { LanguagePicker } from './LanguagePicker'
+import { HowTo } from './HowTo'
 import { useLang } from './i18n/LanguageContext'
 import { MAX_GUESSES } from '@maple/types'
 import './App.css'
@@ -378,7 +379,10 @@ function App() {
       <div className="app">
         <header className="app-header">
           <h1 className="app-title"><MapleLeaf size={30} /> {t.appTitle}</h1>
-          <LanguagePicker />
+          <div className="header-controls">
+            <LanguagePicker />
+            <HowTo />
+          </div>
         </header>
         <p>{t.loading}</p>
       </div>
@@ -395,7 +399,10 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1 className="app-title"><MapleLeaf size={30} /> {t.appTitle}</h1>
-        <LanguagePicker />
+        <div className="header-controls">
+          <LanguagePicker />
+          <HowTo />
+        </div>
       </header>
 
       {gameOver && (
