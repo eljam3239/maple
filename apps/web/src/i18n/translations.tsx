@@ -10,7 +10,6 @@ export const DEFAULT_LANG: Lang = 'en'
 // interpolated name (or embedded <strong>) are functions; everything else is a
 // plain string. Every language must implement this shape in full.
 export interface Dict {
-  appTitle: string
   loading: string
 
   // Map province-distance legend
@@ -70,16 +69,21 @@ export interface Dict {
   share: string
   copied: string
 
+  // Native-Land.ca territory link, shown with the revealed answer
+  landTitle: string
+  landLink: (city: string) => string
+  landNote: string
+
   // How-to-play popover
   howToLabel: string
   howToTitle: string
   howToSteps: (max: number) => ReactNode[]
 
+  githubLabel: string
   languageLabel: string
 }
 
 const en: Dict = {
-  appTitle: 'Maple',
   loading: 'Loading...',
 
   legendTitle: 'Province distance',
@@ -103,8 +107,8 @@ const en: Dict = {
   thDistance: 'Distance',
   thDirection: 'Direction',
   thPopulation: 'Population',
-  popLarger: '⬆️ larger',
-  popSmaller: '⬇️ smaller',
+  popLarger: 'larger',
+  popSmaller: 'smaller',
   guessesEmpty: 'Your guesses will appear here.',
 
   mapBack: '← Canada',
@@ -141,6 +145,10 @@ const en: Dict = {
   share: 'Share',
   copied: 'Copied!',
 
+  landTitle: 'Whose land?',
+  landLink: (city) => `See the territories around ${city} →`,
+  landNote: 'Map by Native Land Digital — a work in progress, not a definitive or legal source.',
+
   howToLabel: 'How to play',
   howToTitle: 'How to play',
   howToSteps: (max) => [
@@ -151,11 +159,11 @@ const en: Dict = {
     <>A new city every day. Come back tomorrow!</>,
   ],
 
+  githubLabel: 'Source on GitHub',
   languageLabel: 'Language',
 }
 
 const fr: Dict = {
-  appTitle: 'Maple',
   loading: 'Chargement...',
 
   legendTitle: 'Distance des provinces',
@@ -179,8 +187,8 @@ const fr: Dict = {
   thDistance: 'Distance',
   thDirection: 'Direction',
   thPopulation: 'Population',
-  popLarger: '⬆️ plus grande',
-  popSmaller: '⬇️ plus petite',
+  popLarger: 'plus grande',
+  popSmaller: 'plus petite',
   guessesEmpty: 'Vos essais apparaîtront ici.',
 
   mapBack: '← Canada',
@@ -217,6 +225,10 @@ const fr: Dict = {
   share: 'Partager',
   copied: 'Copié !',
 
+  landTitle: 'À qui appartient cette terre ?',
+  landLink: (city) => `Voir les territoires autour de ${city} →`,
+  landNote: 'Carte de Native Land Digital — un travail en cours, ni définitif ni juridique.',
+
   howToLabel: 'Comment jouer',
   howToTitle: 'Comment jouer',
   howToSteps: (max) => [
@@ -227,6 +239,7 @@ const fr: Dict = {
     <>Une nouvelle ville chaque jour. Revenez demain !</>,
   ],
 
+  githubLabel: 'Code source sur GitHub',
   languageLabel: 'Langue',
 }
 

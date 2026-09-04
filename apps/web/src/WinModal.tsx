@@ -20,14 +20,36 @@ export interface ShareGuess {
   direction: string
 }
 
+// The revealed target, used to deep-link into Native-Land.ca. Null until the
+// answer is known (i.e. before the game ends).
+export interface AnswerPlace {
+  name: string
+  province: string
+  latitude: number
+  longitude: number
+}
+
 interface Props {
   onClose: () => void
   won: boolean
   city: string
+  place: AnswerPlace | null
   guessCount: number
   puzzleNumber: number
   stats: PlayerStats | null
   guesses: ShareGuess[]
+}
+
+// Deep link into Native Land Digital's map, centred on the answer. Their URL
+// takes `center` as lon,lat (not lat,lon) plus a display `placename`; sending
+// people to the source rather than restating its data here keeps the territory
+// information theirs to correct and keep current.
+function nativeLandUrl(p: AnswerPlace): string {
+  // Commas are decoded back to literal ones: native-land.ca's own share URLs
+  // leave them raw (`Kitchener,%20Ontario,%20Canada`), and a comma is a legal
+  // query character, so this matches their format exactly.
+  const placename = encodeURIComponent(`${p.name}, ${p.province}, Canada`).replace(/%2C/g, ',')
+  return `https://native-land.ca/place?center=${p.longitude},${p.latitude}&placename=${placename}`
 }
 
 const DIRECTION_EMOJI: Record<string, string> = {
@@ -90,7 +112,7 @@ function buildShareText(
 }
 
 // Rendered only while open (parent gates the mount), so it always starts fresh.
-export function WinModal({ onClose, won, city, guessCount, puzzleNumber, stats, guesses }: Props) {
+export function WinModal({ onClose, won, city, place, guessCount, puzzleNumber, stats, guesses }: Props) {
   const { t } = useLang()
   const [copied, setCopied] = useState(false)
 
@@ -134,6 +156,21 @@ export function WinModal({ onClose, won, city, guessCount, puzzleNumber, stats, 
               {t.todayGuesses(guessCount)}
             </p>
           </>
+        )}
+
+        {place && (
+          <div className="land-block">
+            <div className="land-title">{t.landTitle}</div>
+            <a
+              className="land-link"
+              href={nativeLandUrl(place)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.landLink(place.name)}
+            </a>
+            <p className="land-note">{t.landNote}</p>
+          </div>
         )}
 
         <button className="share-btn" onClick={share}>

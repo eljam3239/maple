@@ -54,7 +54,12 @@ export async function getOrCreateSession(playerId: string) {
       // Reveal the target only once the game is over.
       answer:
         existing.completed && targetCity
-          ? { name: targetCity.name, latitude: targetCity.latitude, longitude: targetCity.longitude }
+          ? {
+              name: targetCity.name,
+              province: targetCity.province,
+              latitude: targetCity.latitude,
+              longitude: targetCity.longitude,
+            }
           : undefined,
       stats: await computeStats(playerId),
       guesses: existing.guesses.map((g) => {
