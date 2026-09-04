@@ -9,11 +9,13 @@ apps/web/.env
 
 # Prisma generated files
 apps/api/prisma/generated/
-apps/api/prisma/migrations/
 
 # VS Code / editor
 .vscode/
 *.code-workspace
+
+# macOS
+.DS_Store
 
 # Logs
 *.log
@@ -21,5 +23,4 @@ apps/api/prisma/migrations/
 # pnpm workspace state
 node_modules/.modules.yaml
 node_modules/.pnpm-workspace-state-v1.json
-pnpm-lock.yaml
 
