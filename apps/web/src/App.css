@@ -72,6 +72,11 @@
   margin: 0 0 0.5rem;
 }
 
+/* "Maple" wordmark: the trailing "le" carries the flag red from MapleLeaf. */
+.wordmark-accent {
+  color: #D52B1E;
+}
+
 .header-controls {
   position: absolute;
   top: 0;
@@ -123,6 +128,21 @@
 
 .howto-btn:hover { background: #f2f4f6; }
 
+.github-link {
+  display: flex;
+  align-items: center;
+  padding: 0.2rem;
+  color: #6b7684;
+  border-radius: 6px;
+}
+
+.github-link:hover { color: #1f2933; }
+
+.github-link:focus-visible {
+  outline: 2px solid #34495e;
+  outline-offset: 1px;
+}
+
 /* Anchored under the button; the viewport-relative max-width keeps it on
    screen on narrow phones, where the button sits close to the right edge. */
 .howto-panel {
@@ -155,6 +175,20 @@
 }
 
 .howto-list li + li { margin-top: 0.4rem; }
+
+/* Attribution footer inside the how-to panel, separated by a hairline so it
+   reads as a credit rather than a sixth instruction. */
+.howto-credits {
+  margin: 0.7rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid #eee;
+  font-size: 0.7rem;
+  color: #9aa5b1;
+}
+
+.howto-credits a {
+  color: #6b7684;
+}
 
 @media (max-width: 720px) {
   .lang-picker {
@@ -367,37 +401,158 @@
   flex-shrink: 0;
 }
 
-table {
+/* --- Guess table ---
+   No rules or cell borders: rows float as their own soft bands, separated by
+   border-spacing rather than lines. The only saturated colour in the table is
+   the distance pill, which carries the hot/cold signal. */
+
+.guess-table {
   width: 100%;
-  border-collapse: collapse;
-  color: #111;
+  border-collapse: separate;
+  border-spacing: 0 0.3rem;
+  color: #1f2933;
+  font-size: 0.9rem;
 }
 
+.guess-table th,
+.guess-table td {
+  border: none;
+  padding: 0.45rem 0.5rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Column headers read as quiet labels, not as a filled header bar. The white
+   background is load-bearing: the row is sticky, so guesses must not show
+   through it as the pane scrolls. */
 .guess-pane thead th {
   position: sticky;
   top: 0;
   z-index: 1;
+  padding-bottom: 0.35rem;
+  background: #fff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9aa5b1;
 }
 
-th, td {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  text-align: center;
+.guess-table tbody tr {
+  background: #f7f8f9;
 }
 
-th {
-  background: #f5f5f5;
+/* Rounded ends, applied to the edge cells since a <tr> can't be rounded. */
+.guess-table tbody td:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.guess-table tbody td:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.guess-table .col-num {
+  width: 2.2rem;
+  color: #9aa5b1;
+  font-variant-numeric: tabular-nums;
+}
+
+.guess-table .col-city {
+  text-align: left;
   font-weight: 600;
 }
 
-tbody tr {
-  background: #fdecea;
+.guess-table .col-dir {
+  font-size: 1.15rem;
+  line-height: 1;
+  color: #52606d;
 }
+
+.guess-table .col-pop {
+  white-space: nowrap;
+  color: #52606d;
+}
+
+.pop-arrow {
+  font-size: 0.7rem;
+  color: #9aa5b1;
+}
+
+/* Province: two-letter code preceded by a dot in the map's palette. */
+.prov-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prov-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+
+/* Distance pill — the table's heat signal, same thresholds as the share grid. */
+.dist-pill {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.prox-hot   { background: #fde2e1; color: #a02622; }
+.prox-warm  { background: #fdeccd; color: #955513; }
+.prox-cool  { background: #e7eef7; color: #3f6187; }
+.prox-cold  { background: #eef0f2; color: #6b7684; }
+.prox-found { background: #d6efd8; color: #276b2c; }
 
 .correct-row {
-  background: #c8e6c9;
+  background: #e8f6e9;
   font-weight: 600;
-  box-shadow: inset 4px 0 0 #2e7d32;
+}
+
+.correct-row .col-num,
+.correct-row .col-dir,
+.correct-row .col-pop {
+  color: #4c7a51;
+}
+
+/* Native-Land.ca territory link inside the win/loss modal. */
+.land-block {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.8rem;
+  background: #f7f8f9;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.land-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9aa5b1;
+}
+
+.land-link {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c6e49;
+  text-decoration: none;
+}
+
+.land-link:hover { text-decoration: underline; }
+
+.land-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: #9aa5b1;
 }
 
 /* --- Win modal --- */

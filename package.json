@@ -1,8 +1,7 @@
 {
   "name": "maple",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A daily Canadian city guessing game.",
   "scripts": {
     "dev:web": "pnpm --filter web dev",
     "dev:api": "pnpm --filter api dev",
@@ -12,7 +11,7 @@
     "concurrently": "^8.0.0"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Eli James",
+  "license": "MIT",
   "packageManager": "pnpm@10.30.0"
 }

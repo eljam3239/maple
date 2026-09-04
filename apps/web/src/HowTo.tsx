@@ -47,6 +47,15 @@ export function HowTo() {
               <li key={i}>{step}</li>
             ))}
           </ol>
+          {/* GeoNames is CC BY 4.0, which obliges us to credit it wherever the
+              data is used — the README alone doesn't cover the shipped app. */}
+          <p className="howto-credits">
+            {t.creditsCityData}:{' '}
+            <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">
+              GeoNames
+            </a>{' '}
+            (CC BY 4.0)
+          </p>
         </div>
       )}
     </div>

@@ -16,11 +16,12 @@
   "license": "ISC",
   "packageManager": "pnpm@10.30.0",
   "dependencies": {
+    "@fastify/rate-limit": "^11.2.0",
     "@maple/types": "workspace:*",
     "@prisma/adapter-pg": "^7.4.0",
+    "dotenv": "^16.6.1",
     "fastify": "^5.7.4",
-    "pg": "^8.18.0",
-    "zod": "^4.3.6"
+    "pg": "^8.18.0"
   },
   "devDependencies": {
     "@prisma/client": "^7.4.0",

@@ -10,7 +10,6 @@ export const DEFAULT_LANG: Lang = 'en'
 // interpolated name (or embedded <strong>) are functions; everything else is a
 // plain string. Every language must implement this shape in full.
 export interface Dict {
-  appTitle: string
   loading: string
 
   // Map province-distance legend
@@ -30,6 +29,11 @@ export interface Dict {
   errFailedSession: string
   errGeneric: string
   errNetwork: string
+  // Keyed by the API's GameError codes
+  errSessionNotFound: string
+  errSessionCompleted: string
+  errNoGuesses: string
+  errCityNotFound: string
 
   // Guess table
   thNum: string
@@ -70,16 +74,22 @@ export interface Dict {
   share: string
   copied: string
 
+  // Native-Land.ca territory link, shown with the revealed answer
+  landTitle: string
+  landLink: (city: string) => string
+  landNote: string
+
   // How-to-play popover
   howToLabel: string
   howToTitle: string
   howToSteps: (max: number) => ReactNode[]
+  creditsCityData: string
 
+  githubLabel: string
   languageLabel: string
 }
 
 const en: Dict = {
-  appTitle: 'Maple',
   loading: 'Loading...',
 
   legendTitle: 'Province distance',
@@ -96,6 +106,10 @@ const en: Dict = {
   errFailedSession: 'Failed to start session',
   errGeneric: 'Something went wrong',
   errNetwork: 'Network error',
+  errSessionNotFound: 'Your session expired — reload to start again.',
+  errSessionCompleted: "You've already finished today's puzzle.",
+  errNoGuesses: 'No guesses left for today.',
+  errCityNotFound: "That city isn't in the list.",
 
   thNum: '#',
   thCity: 'City',
@@ -103,8 +117,8 @@ const en: Dict = {
   thDistance: 'Distance',
   thDirection: 'Direction',
   thPopulation: 'Population',
-  popLarger: '⬆️ larger',
-  popSmaller: '⬇️ smaller',
+  popLarger: 'larger',
+  popSmaller: 'smaller',
   guessesEmpty: 'Your guesses will appear here.',
 
   mapBack: '← Canada',
@@ -141,6 +155,10 @@ const en: Dict = {
   share: 'Share',
   copied: 'Copied!',
 
+  landTitle: 'Whose land?',
+  landLink: (city) => `See the territories around ${city} →`,
+  landNote: 'Map by Native Land Digital — a work in progress, not a definitive or legal source.',
+
   howToLabel: 'How to play',
   howToTitle: 'How to play',
   howToSteps: (max) => [
@@ -150,12 +168,13 @@ const en: Dict = {
     <>The map shades each province by how far it is from the answer's province.</>,
     <>A new city every day. Come back tomorrow!</>,
   ],
+  creditsCityData: 'City data',
 
+  githubLabel: 'Source on GitHub',
   languageLabel: 'Language',
 }
 
 const fr: Dict = {
-  appTitle: 'Maple',
   loading: 'Chargement...',
 
   legendTitle: 'Distance des provinces',
@@ -172,6 +191,10 @@ const fr: Dict = {
   errFailedSession: 'Échec du démarrage de la session',
   errGeneric: 'Une erreur s’est produite',
   errNetwork: 'Erreur réseau',
+  errSessionNotFound: 'Votre session a expiré — rechargez pour recommencer.',
+  errSessionCompleted: 'Vous avez déjà terminé le casse-tête d’aujourd’hui.',
+  errNoGuesses: 'Plus d’essais pour aujourd’hui.',
+  errCityNotFound: 'Cette ville n’est pas dans la liste.',
 
   thNum: '#',
   thCity: 'Ville',
@@ -179,8 +202,8 @@ const fr: Dict = {
   thDistance: 'Distance',
   thDirection: 'Direction',
   thPopulation: 'Population',
-  popLarger: '⬆️ plus grande',
-  popSmaller: '⬇️ plus petite',
+  popLarger: 'plus grande',
+  popSmaller: 'plus petite',
   guessesEmpty: 'Vos essais apparaîtront ici.',
 
   mapBack: '← Canada',
@@ -217,6 +240,10 @@ const fr: Dict = {
   share: 'Partager',
   copied: 'Copié !',
 
+  landTitle: 'À qui appartient cette terre ?',
+  landLink: (city) => `Voir les territoires autour de ${city} →`,
+  landNote: 'Carte de Native Land Digital — un travail en cours, ni définitif ni juridique.',
+
   howToLabel: 'Comment jouer',
   howToTitle: 'Comment jouer',
   howToSteps: (max) => [
@@ -226,7 +253,9 @@ const fr: Dict = {
     <>La carte colore chaque province selon sa distance de la province de la réponse.</>,
     <>Une nouvelle ville chaque jour. Revenez demain !</>,
   ],
+  creditsCityData: 'Données des villes',
 
+  githubLabel: 'Code source sur GitHub',
   languageLabel: 'Langue',
 }
 
