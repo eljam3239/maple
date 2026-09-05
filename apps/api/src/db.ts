@@ -19,8 +19,17 @@ import { PrismaPg } from "@prisma/adapter-pg";
  * Without a CA we still negotiate TLS, but cannot verify who we are talking to:
  * that stops passive snooping, not an active man-in-the-middle. It is a
  * stopgap, so it warns.
+ *
+ * `?sslmode=disable` in DATABASE_URL turns TLS off entirely, for local
+ * databases that do not offer it. Never use it against a remote server.
  */
 function sslConfig() {
+  // Explicit opt-out for databases that don't speak TLS at all — a local
+  // Postgres in Docker, say. Without this the pool refuses to connect to them
+  // with "The server does not support SSL connections".
+  const url = process.env.DATABASE_URL;
+  if (url && new URL(url).searchParams.get("sslmode") === "disable") return false;
+
   const inline = process.env.DATABASE_CA_CERT;
   const certPath = process.env.PGSSLROOTCERT;
   const ca = inline || (certPath ? fs.readFileSync(certPath, "utf8") : undefined);

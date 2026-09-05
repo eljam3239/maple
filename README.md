@@ -65,11 +65,24 @@ game sessions; `SEED_FORCE=1` overrides that.
 | `PGSSLROOTCERT` | Path to the database's CA certificate. Without it (or `DATABASE_CA_CERT`) the connection is encrypted but the server's identity is **not verified**, and the API logs a warning at startup. |
 | `DATABASE_CA_CERT` | The CA certificate inline as PEM, for hosts that only take env vars. |
 | `DATABASE_POOL_MAX` | Connections in the pool (default 10). Budget it against your database's limit and the number of instances you run. |
+| `SEED_FORCE` | Set to `1` to let `pnpm seed` run against a database that already has game sessions. |
 | `PORT` / `HOST` | Defaults `3000` and `0.0.0.0`. |
 
 On Supabase the CA comes from Project Settings → Database → SSL Configuration.
 Its certificate is issued by a private Supabase CA that Node does not trust by
-default, so `sslmode=require` in the URL fails; supply the CA instead.
+default, so `sslmode=require` in the URL fails; supply the CA instead. For a
+local database with no TLS at all, put `?sslmode=disable` in `DATABASE_URL`.
+
+### Checking a database is deploy-ready
+
+```bash
+pnpm --filter api doctor
+```
+
+Reports on TLS (and whether the certificate is actually verified), applied
+migrations, seeded rows, connection headroom, and — on Supabase — whether
+`anon`/`authenticated` can reach your tables through the Data API. Exits
+non-zero if anything fails, so it can gate a deploy.
 
 ### Rebuilding the city data
 

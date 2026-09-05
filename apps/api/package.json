@@ -9,7 +9,8 @@
     "studio": "prisma studio",
     "generate": "prisma generate",
     "build-cities": "tsx prisma/build-cities.ts",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "doctor": "tsx scripts/db-doctor.ts"
   },
   "keywords": [],
   "author": "",
