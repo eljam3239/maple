@@ -5,6 +5,7 @@ import Fastify from "fastify";
 import rateLimit from "@fastify/rate-limit";
 import fastifyStatic from "@fastify/static";
 import { GameError } from "./errors";
+import { prisma } from "./db";
 import { evaluateGuess } from "./services/guess";
 import { createPlayer, getOrCreateSession } from "./services/session";
 import { listCities } from "./services/cities";
@@ -52,8 +53,32 @@ async function start() {
   });
 
   await app.register(async (api) => {
+  // Health, and incidentally the keep-alive. Supabase pauses Free Plan projects
+  // after ~7 days of low activity, and a paused project has to be restored by
+  // hand from the dashboard — so the game would simply be down until someone
+  // noticed. Fly probes this endpoint every 30s, so touching the database here
+  // means the project never sits idle.
+  //
+  // Throttled to one query every 5 minutes (~288/day rather than ~2,880), and
+  // it always answers 200: if the database is unreachable, restarting this
+  // machine would not fix it, and a restart loop during a database blip is
+  // worse than serving a degraded status.
+  let lastPing = 0;
+  let dbState: "ok" | "unreachable" | "unchecked" = "unchecked";
+  const PING_INTERVAL_MS = 5 * 60 * 1000;
+
   api.get("/health", async () => {
-    return { status: "maple-map API running" };
+    if (Date.now() - lastPing > PING_INTERVAL_MS) {
+      lastPing = Date.now();
+      try {
+        await prisma.$queryRaw`SELECT 1`;
+        dbState = "ok";
+      } catch (err) {
+        dbState = "unreachable";
+        app.log.error({ err }, "health check could not reach the database");
+      }
+    }
+    return { status: "maple-map API running", db: dbState };
   });
 
   api.get("/cities", async (req, res) => {
