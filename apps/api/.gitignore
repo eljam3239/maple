@@ -1,6 +1,9 @@
 node_modules
-# Keep environment variables out of version control
+# Keep environment variables out of version control. The glob matters: plain
+# `.env` misses .env.local, .env.production and hand-made backups, any of which
+# can hold a live database password.
 .env
+.env.*
 
 /src/generated/prisma
 

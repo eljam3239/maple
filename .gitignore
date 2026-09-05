@@ -2,10 +2,12 @@
 node_modules/
 .pnpm-store/
 
-# Environment variables
+# Environment variables (the glob also covers .env.local, .env.production and
+# hand-made backups, which can hold live credentials)
 .env
-apps/api/.env
-apps/web/.env
+.env.*
+apps/api/.env*
+apps/web/.env*
 
 # Prisma generated files
 apps/api/prisma/generated/
