@@ -109,6 +109,38 @@ It downloads the GeoNames Canada dump (cached under `prisma/data/geonames/`,
 gitignored) and rewrites the JSON. The tunable knobs are at the top of
 [`prisma/build-cities.ts`](apps/api/prisma/build-cities.ts).
 
+## Deploying
+
+One process serves the API and the built web app on a single origin, so the
+browser needs no CORS and no API URL baked into the bundle. `Dockerfile` builds
+that image; `fly.toml` runs it on Fly.io in `yyz` (Toronto), the region closest
+to the database in `ca-central-1`.
+
+```bash
+# 1. Apply migrations first, from a machine that holds the admin credential.
+pnpm --filter api migrate:deploy
+
+# 2. Confirm the database is ready.
+pnpm --filter api doctor
+
+# 3. Ship.
+fly deploy
+```
+
+Migrations run here rather than in the container on purpose: they need rights
+the runtime role does not have, and every booting machine would otherwise race
+to apply them. The consequence is that the deployed app holds only the
+least-privilege credential — set `ADMIN_DATABASE_URL` nowhere near production.
+
+Secrets the app needs, set with `fly secrets set`:
+
+| Secret | Value |
+|---|---|
+| `DATABASE_URL` | The `maple_app` pooler connection string |
+| `DATABASE_CA_CERT` | Contents of the Supabase CA certificate, inline (`fly secrets set DATABASE_CA_CERT="$(cat prod-ca-2021.crt)"`) |
+
+`PORT` and `WEB_ROOT` are already set in `fly.toml`.
+
 ## Credits
 
 City data from [GeoNames](https://www.geonames.org/), licensed

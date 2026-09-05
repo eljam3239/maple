@@ -1,6 +1,9 @@
 import "dotenv/config";
+import fs from "node:fs";
+import path from "node:path";
 import Fastify from "fastify";
 import rateLimit from "@fastify/rate-limit";
+import fastifyStatic from "@fastify/static";
 import { GameError } from "./errors";
 import { evaluateGuess } from "./services/guess";
 import { createPlayer, getOrCreateSession } from "./services/session";
@@ -10,6 +13,12 @@ const PORT = Number(process.env.PORT ?? 3000);
 // Containers route to the pod's own address, so binding to localhost would make
 // the service unreachable from outside it.
 const HOST = process.env.HOST ?? "0.0.0.0";
+
+// When set, the built web app is served from this directory on the same origin
+// as the API. Same origin is the point: the browser asks for /api/... and gets
+// it without CORS, and no build-time API URL has to be baked into the bundle.
+// Unset in development, where Vite serves the front end and proxies /api here.
+const WEB_ROOT = process.env.WEB_ROOT;
 
 const app = Fastify({ logger: true });
 
@@ -42,11 +51,12 @@ async function start() {
       (req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ?? req.ip,
   });
 
-  app.get("/", async () => {
+  await app.register(async (api) => {
+  api.get("/health", async () => {
     return { status: "maple-map API running" };
   });
 
-  app.get("/cities", async (req, res) => {
+  api.get("/cities", async (req, res) => {
     try {
       res.send(await listCities());
     } catch (err) {
@@ -56,7 +66,7 @@ async function start() {
 
   // Tighter than the global limit: each call writes a Player row, so this is
   // the one endpoint where a script can grow the database unboundedly.
-  app.post("/player", {
+  api.post("/player", {
     config: { rateLimit: { max: 5, timeWindow: "1 hour" } },
   }, async (req, res) => {
     try {
@@ -66,7 +76,7 @@ async function start() {
     }
   });
 
-  app.post("/session", async (req, res) => {
+  api.post("/session", async (req, res) => {
     try {
       const { playerId } = req.body as { playerId?: string };
 
@@ -80,7 +90,7 @@ async function start() {
     }
   });
 
-  app.post("/guess", async (req, res) => {
+  api.post("/guess", async (req, res) => {
     try {
       const { sessionId, cityId, city } = req.body as {
         sessionId?: string;
@@ -97,6 +107,23 @@ async function start() {
       return fail(res, err);
     }
   });
+  }, { prefix: "/api" });
+
+  // Static front end, if this process is also serving it.
+  if (WEB_ROOT && fs.existsSync(WEB_ROOT)) {
+    await app.register(fastifyStatic, { root: path.resolve(WEB_ROOT) });
+
+    // Single-page app: unmatched GETs return index.html so client-side routes
+    // and refreshes work. Anything under /api that got here is a genuine 404
+    // and must stay JSON — returning HTML would make fetch() parse garbage.
+    app.setNotFoundHandler((req, res) => {
+      if (req.url.startsWith("/api/") || req.method !== "GET") {
+        return res.status(404).send({ code: "NOT_FOUND", error: "Not found" });
+      }
+      return res.sendFile("index.html");
+    });
+    app.log.info(`serving web app from ${path.resolve(WEB_ROOT)}`);
+  }
 
   // Routes and plugins must all be registered before listen(): Fastify closes
   // registration once the server is ready.

@@ -1,0 +1,32 @@
+# Toronto: the only Canadian region Fly offers, and the closest to the
+# Supabase database in ca-central-1 (Montreal).
+app = "maple"
+primary_region = "yyz"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8080"
+  WEB_ROOT = "/app/apps/web/dist"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  # One machine always up. A daily puzzle gets a burst right after UTC midnight
+  # and a cold start there is the worst possible moment; set this to 0 to trade
+  # that for a lower bill.
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
