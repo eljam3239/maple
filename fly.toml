@@ -1,6 +1,6 @@
 # Toronto: the only Canadian region Fly offers, and the closest to the
 # Supabase database in ca-central-1 (Montreal).
-app = "maple"
+app = "maple-daily"
 primary_region = "yyz"
 
 [build]
