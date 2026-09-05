@@ -65,6 +65,7 @@ game sessions; `SEED_FORCE=1` overrides that.
 | `PGSSLROOTCERT` | Path to the database's CA certificate. Without it (or `DATABASE_CA_CERT`) the connection is encrypted but the server's identity is **not verified**, and the API logs a warning at startup. |
 | `DATABASE_CA_CERT` | The CA certificate inline as PEM, for hosts that only take env vars. |
 | `DATABASE_POOL_MAX` | Connections in the pool (default 10). Budget it against your database's limit and the number of instances you run. |
+| `ADMIN_DATABASE_URL` | Connection string with DDL rights, used by migrations and the seed. `DATABASE_URL` is used if unset. |
 | `SEED_FORCE` | Set to `1` to let `pnpm seed` run against a database that already has game sessions. |
 | `PORT` / `HOST` | Defaults `3000` and `0.0.0.0`. |
 
@@ -72,6 +73,17 @@ On Supabase the CA comes from Project Settings → Database → SSL Configuratio
 Its certificate is issued by a private Supabase CA that Node does not trust by
 default, so `sslmode=require` in the URL fails; supply the CA instead. For a
 local database with no TLS at all, put `?sslmode=disable` in `DATABASE_URL`.
+
+### Least-privilege database role
+
+The API should not connect as the database owner. `pnpm --filter api create-app-role`
+creates a `maple_app` role that can read cities and read/insert the rows a round
+of play produces — no `DELETE` anywhere, no schema access, no reading the
+migration history. It writes the new `DATABASE_URL` into `.env` (and moves the
+admin connection to `ADMIN_DATABASE_URL`), generating a password it never
+prints.
+
+Re-run it any time to reset the password or re-apply the grants.
 
 ### Checking a database is deploy-ready
 

@@ -33,12 +33,26 @@ export async function evaluateGuess(
   // 2. Look up the guessed city. The client normally sends an id (picked from
   // the autocomplete), which is unambiguous even when two provinces share a
   // name. A bare name is still accepted as a fallback for free-typed guesses.
-  const guessedCity = guess.cityId
-    ? await prisma.city.findFirst({ where: { id: guess.cityId, guessable: true } })
-    : guess.cityName
-    ? await prisma.city.findFirst({
-        where: { guessable: true, name: { equals: guess.cityName, mode: "insensitive" } },
-      })
+  // A free-typed name must also match the accent-free aliases the autocomplete
+  // offers — 95 cities carry one, so without this "Montreal" is rejected while
+  // "Montréal" is accepted. Raw SQL because Prisma's array `has` is
+  // case-sensitive and cannot be folded. Most populous wins when names tie.
+  const byName = async (name: string) =>
+    (
+      await prisma.$queryRaw<Array<{ id: number }>>`
+        SELECT id FROM "City"
+        WHERE guessable
+          AND (lower(name) = lower(${name})
+               OR EXISTS (SELECT 1 FROM unnest(aliases) a WHERE lower(a) = lower(${name})))
+        ORDER BY population DESC
+        LIMIT 1`
+    )[0];
+
+  const namedId = guess.cityId ? undefined : guess.cityName ? (await byName(guess.cityName))?.id : undefined;
+  const lookupId = guess.cityId ?? namedId;
+
+  const guessedCity = lookupId
+    ? await prisma.city.findFirst({ where: { id: lookupId, guessable: true } })
     : null;
 
   if (!guessedCity) {

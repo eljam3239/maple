@@ -1,6 +1,25 @@
 import "dotenv/config";
-import { prisma } from "../src/db";
+import fs from "node:fs";
+import { PrismaClient } from "../src/generated/prisma";
+import { PrismaPg } from "@prisma/adapter-pg";
 import cities from "./data/canadian_cities_full.json";
+
+// Seeding deletes rows and bulk-inserts cities, which the least-privilege
+// runtime role cannot do — so this connects as the admin role rather than
+// reusing src/db.ts.
+const adminUrl = process.env.ADMIN_DATABASE_URL || process.env.DATABASE_URL;
+
+function ssl() {
+  if (adminUrl && new URL(adminUrl).searchParams.get("sslmode") === "disable") return false;
+  const ca =
+    process.env.DATABASE_CA_CERT ||
+    (process.env.PGSSLROOTCERT ? fs.readFileSync(process.env.PGSSLROOTCERT, "utf8") : undefined);
+  return ca ? { ca, rejectUnauthorized: true } : { rejectUnauthorized: false };
+}
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: adminUrl, ssl: ssl() }),
+});
 
 async function main() {
   // This is a destructive rebuild, and it is easy to run against the wrong

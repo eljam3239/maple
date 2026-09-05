@@ -63,12 +63,36 @@ async function main() {
   add(bypass ? "WARN" : "PASS", "DB role", bypass ? `${usr} has BYPASSRLS — consider a least-privilege role for the API` : `${usr}`);
 
   // --- Schema and migrations
-  const applied = await q(`select migration_name from _prisma_migrations where finished_at is not null`).catch(() => []);
+  // The least-privilege runtime role cannot read _prisma_migrations, by design.
+  // Use the admin connection for this check when one is configured, and never
+  // mistake "permission denied" for "nothing applied".
   const dir = path.join(__dirname, "..", "prisma", "migrations");
   const onDisk = fs.existsSync(dir) ? fs.readdirSync(dir).filter((d) => fs.statSync(path.join(dir, d)).isDirectory()) : [];
-  const missing = onDisk.filter((m) => !applied.some((a: any) => a.migration_name === m));
-  add(missing.length ? "FAIL" : "PASS", "Migrations",
-    missing.length ? `${missing.length} not applied: ${missing.join(", ")} — run prisma migrate deploy` : `all ${onDisk.length} applied`);
+  const migrationSql = `select migration_name from _prisma_migrations where finished_at is not null`;
+
+  let applied: any[] | null = null;
+  const adminUrl = process.env.ADMIN_DATABASE_URL;
+  if (adminUrl && adminUrl !== url) {
+    const admin = new Client({ connectionString: adminUrl, ssl: sslConfig() });
+    try {
+      await admin.connect();
+      applied = (await admin.query(migrationSql)).rows;
+    } catch {
+      applied = null;
+    } finally {
+      await admin.end().catch(() => {});
+    }
+  } else {
+    applied = await q(migrationSql).catch(() => null);
+  }
+
+  if (applied === null) {
+    add("WARN", "Migrations", `cannot read _prisma_migrations as this role — set ADMIN_DATABASE_URL to verify (${onDisk.length} on disk)`);
+  } else {
+    const missing = onDisk.filter((m) => !applied!.some((a: any) => a.migration_name === m));
+    add(missing.length ? "FAIL" : "PASS", "Migrations",
+      missing.length ? `${missing.length} not applied: ${missing.join(", ")} — run prisma migrate deploy` : `all ${onDisk.length} applied`);
+  }
 
   const tables = (await q(`select relname from pg_class where relnamespace='public'::regnamespace and relkind='r'`)).map((r: any) => r.relname);
   const missingTables = EXPECTED_TABLES.filter((t) => !tables.includes(t));
