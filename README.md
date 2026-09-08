@@ -32,6 +32,7 @@ answer, rather than restating that information here.
 | Web | React 19, Vite, react-simple-maps + d3-geo |
 | API | Fastify 5, Prisma 7, PostgreSQL |
 | Shared | `packages/types` — the request/response contract |
+| Tests | Vitest, React Testing Library, `fastify.inject` |
 | Tooling | pnpm workspaces, TypeScript |
 
 ## Running it locally
@@ -108,6 +109,35 @@ pnpm --filter api build-cities
 It downloads the GeoNames Canada dump (cached under `prisma/data/geonames/`,
 gitignored) and rewrites the JSON. The tunable knobs are at the top of
 [`prisma/build-cities.ts`](apps/api/prisma/build-cities.ts).
+
+## Tests
+
+```bash
+pnpm test        # both workspaces
+pnpm check       # typecheck, lint, then test — what CI runs
+```
+
+Nothing here needs a database or a port. The API's tests drive the real Fastify
+instance through `app.inject()` with Prisma replaced by a mock, so the routes,
+the rate limiter, the error handling and the SPA fallback are all exercised for
+real; the web tests render components against a mocked `fetch`.
+
+What they are mostly there to protect:
+
+- **The answer stays server-side.** Both `/guess` and `/session` are asserted to
+  withhold the target — and everything derived from it — until the game is over.
+- **Internal errors do not reach the client.** A thrown Prisma error must come
+  back as a generic 500, with no table names or connection strings in the body.
+- **The daily puzzle survives the midnight race.** Several players hitting a
+  fresh UTC day all get the same city rather than a unique-violation error.
+- **Streaks.** Enough date arithmetic to be worth pinning down: a streak alive
+  from yesterday, one broken by a loss rather than an absent day, and the
+  longest run ever.
+- **Both languages stay complete.** French is asserted to implement every key
+  English defines, with the same value shape.
+
+`vitest` (no `run`) watches; `vitest run --coverage` reports. Coverage currently
+sits near 90% of statements in each workspace.
 
 ## Deploying
 

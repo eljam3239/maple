@@ -6,6 +6,11 @@
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-  }
+    "noEmit": true,
+    // The generated Prisma client ships .d.ts files that reference internal
+    // runtime packages tsc cannot resolve. They are not ours to fix.
+    "skipLibCheck": true
+  },
+  "include": ["src", "test", "prisma", "scripts", "vitest.config.ts"],
+  "exclude": ["src/generated"]
 }
-

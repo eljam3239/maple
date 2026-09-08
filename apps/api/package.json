@@ -12,7 +12,11 @@
     "seed": "tsx prisma/seed.ts",
     "doctor": "tsx scripts/db-doctor.ts",
     "create-app-role": "tsx scripts/create-app-role.ts",
-    "migrate:deploy": "prisma migrate deploy"
+    "migrate:deploy": "prisma migrate deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -32,7 +36,9 @@
   "devDependencies": {
     "@types/node": "^24.10.13",
     "@types/pg": "^8.16.0",
+    "@vitest/coverage-v8": "^5.0.0",
     "prisma": "^7.4.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.0"
   }
 }

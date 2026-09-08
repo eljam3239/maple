@@ -8,6 +8,8 @@ import { LanguagePicker } from './LanguagePicker'
 import { HowTo } from './HowTo'
 import { GitHubLink } from './GitHubLink'
 import { useLang } from './i18n/LanguageContext'
+import { normalize } from './search'
+import { puzzleNumber } from './puzzle'
 import type { Dict } from './i18n/translations'
 import { MAX_GUESSES } from '@maple/types'
 import './App.css'
@@ -23,9 +25,6 @@ interface Answer {
 // How far double-click / wheel zoom can go. High enough that a cluster of
 // guesses only 15-30 km apart spreads out into distinct, clickable pins.
 const MAX_ZOOM = 40
-
-// Reference date for the shareable puzzle number (Maple #N). Day 1 = launch.
-const LAUNCH_EPOCH = Date.UTC(2026, 0, 1)
 
 interface GuessResult {
   city: string
@@ -300,13 +299,10 @@ function App() {
   }, [])
 
   // Normalized names already guessed, so the dropdown can flag repeats.
-  const guessedNames = useMemo(() => {
-    return new Set(
-      guesses.map(g =>
-        g.city.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim(),
-      ),
-    )
-  }, [guesses])
+  const guessedNames = useMemo(
+    () => new Set(guesses.map(g => normalize(g.city))),
+    [guesses],
+  )
 
   // Fall back to a sensible size until the ResizeObserver reports the real one,
   // so the map renders immediately rather than waiting on measurement.
@@ -453,9 +449,7 @@ function App() {
     )
   }
 
-  const puzzleNumber = puzzleDate
-    ? Math.floor((Date.parse(puzzleDate) - LAUNCH_EPOCH) / 86_400_000) + 1
-    : 0
+  const dayNumber = puzzleNumber(puzzleDate)
   // The revealed target, for both the modal copy and the Native-Land deep link.
   // The server sends `answer` once the game is over; on a win we can also
   // recover it from the winning guess, which carries the same city and coords.
@@ -515,7 +509,7 @@ function App() {
           city={answerCity}
           place={answerPlace}
           guessCount={guesses.length}
-          puzzleNumber={puzzleNumber}
+          puzzleNumber={dayNumber}
           stats={stats}
           guesses={guesses}
         />

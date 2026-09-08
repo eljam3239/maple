@@ -1,53 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLang } from './i18n/LanguageContext'
+import { matchCities, normalize, type CityOption } from './search'
 
-export interface CityOption {
-  id: number
-  name: string
-  province: string
-  aliases: string[]
-}
+export type { CityOption }
 
 interface Props {
   cities: CityOption[]
   guessedNames: Set<string>
   disabled?: boolean
   onSubmit: (guess: { cityId?: number; cityName: string }) => void
-}
-
-const MAX_RESULTS = 8
-
-// Lowercase + strip accents so "montreal" matches "Montréal" and casing is
-// irrelevant. Used for both the query and the candidate names.
-function normalize(s: string): string {
-  return s
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase()
-    .trim()
-}
-
-// Rank: prefix matches (by whole string, then by any word) above interior
-// substring matches. Non-matches are dropped.
-function rank(query: string, name: string): number {
-  const q = normalize(query)
-  const n = normalize(name)
-  if (!q) return -1
-  if (n.startsWith(q)) return 0
-  if (n.split(/\s+/).some(word => word.startsWith(q))) return 1
-  if (n.includes(q)) return 2
-  return -1
-}
-
-// Best rank across the city's name and its aliases (e.g. "Montreal" matches
-// "Montréal"), so a variant spelling still surfaces the canonical city.
-function rankCity(query: string, city: CityOption): number {
-  let best = -1
-  for (const candidate of [city.name, ...city.aliases]) {
-    const score = rank(query, candidate)
-    if (score >= 0 && (best === -1 || score < best)) best = score
-  }
-  return best
 }
 
 export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: Props) {
@@ -58,15 +19,7 @@ export function CityAutocomplete({ cities, guessedNames, disabled, onSubmit }: P
   const rootRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
 
-  const matches = useMemo(() => {
-    if (!query.trim()) return []
-    return cities
-      .map(city => ({ city, score: rankCity(query, city) }))
-      .filter(m => m.score >= 0)
-      .sort((a, b) => a.score - b.score) // stable: preserves population order within a tier
-      .slice(0, MAX_RESULTS)
-      .map(m => m.city)
-  }, [cities, query])
+  const matches = useMemo(() => matchCities(query, cities), [cities, query])
 
   // Keep the highlighted row scrolled into view as it moves.
   useEffect(() => {
